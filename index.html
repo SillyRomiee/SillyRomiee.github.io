@@ -2,131 +2,479 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Romiee 🐾</title>
+  <title>Romiee 🐾 — welcome 2 my page!!</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Optional nicer font -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Poppins', sans-serif;
+    :root {
+      --black:   #0a0a0f;
+      --green:   #39ff14;
+      --green2:  #00c853;
+      --amber:   #ffb300;
+      --pink:    #ff69b4;
+      --cyan:    #00e5ff;
+      --white:   #e8ffe8;
+      --dim:     rgba(57,255,20,0.55);
+      --scanline: rgba(0,0,0,0.18);
     }
-
-    body {
-      height: 100vh;
-      background: radial-gradient(circle at top, #2a0a3d, #0d0614 70%);
+ 
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+    html, body {
+      min-height: 100vh;
+      background: var(--black);
+      color: var(--green);
+      font-family: 'Share Tech Mono', monospace;
+      cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Crect x='0' y='0' width='16' height='16' fill='%2339ff14'/%3E%3C/svg%3E") 8 8, crosshair;
+    }
+ 
+    .crt {
+      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: white;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
     }
-
-    .card {
+ 
+    .crt::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        var(--scanline) 0px,
+        var(--scanline) 1px,
+        transparent 1px,
+        transparent 3px
+      );
+      pointer-events: none;
+      z-index: 100;
+      animation: flicker 0.15s infinite;
+    }
+ 
+    .crt::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at center,
+        transparent 55%,
+        rgba(0,0,0,0.75) 100%);
+      pointer-events: none;
+      z-index: 99;
+    }
+ 
+    @keyframes flicker {
+      0%   { opacity: 1; }
+      92%  { opacity: 1; }
+      93%  { opacity: 0.85; }
+      94%  { opacity: 1; }
+      96%  { opacity: 0.9; }
+      100% { opacity: 1; }
+    }
+ 
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(57,255,20,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(57,255,20,0.06) 1px, transparent 1px);
+      background-size: 32px 32px;
+      z-index: 0;
+    }
+ 
+    .window {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 660px;
+      border: 2px solid var(--green);
+      box-shadow:
+        0 0 0 1px var(--black),
+        0 0 12px var(--green),
+        0 0 40px rgba(57,255,20,0.15),
+        inset 0 0 30px rgba(57,255,20,0.04);
+      animation: boot 0.6s steps(1) both;
+    }
+ 
+    @keyframes boot {
+      0%  { opacity: 0; transform: scaleY(0.02); }
+      30% { opacity: 1; transform: scaleY(0.02); }
+      60% { transform: scaleY(1.01); }
+      100%{ transform: scaleY(1); }
+    }
+ 
+    .titlebar {
+      background: var(--green);
+      color: var(--black);
+      font-family: 'Press Start 2P', monospace;
+      font-size: 9px;
+      padding: 7px 12px;
       display: flex;
       align-items: center;
-      gap: 30px;
-      padding: 35px;
-      width: 90%;
-      max-width: 750px;
-
-      background: rgba(30, 10, 50, 0.6);
-      border-radius: 20px;
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(155, 89, 182, 0.2);
-
-      box-shadow:
-        0 0 40px rgba(155, 89, 182, 0.25),
-        0 10px 40px rgba(0,0,0,0.6);
+      justify-content: space-between;
+      letter-spacing: 0.05em;
+      user-select: none;
     }
-
-    .avatar {
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
+ 
+    .titlebar-buttons {
+      display: flex;
+      gap: 6px;
+    }
+ 
+    .titlebar-buttons span {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border: 2px solid var(--black);
+      background: var(--black);
+      font-size: 8px;
+      line-height: 9px;
+      text-align: center;
+      cursor: pointer;
+      color: var(--green);
+    }
+ 
+    .window-body {
+      background: var(--black);
+      padding: 28px 28px 24px;
+    }
+ 
+    .prompt-line {
+      font-size: 11px;
+      color: var(--dim);
+      margin-bottom: 22px;
+      letter-spacing: 0.05em;
+    }
+ 
+    .prompt-line .cursor {
+      display: inline-block;
+      width: 8px;
+      height: 13px;
+      background: var(--green);
+      vertical-align: middle;
+      margin-left: 3px;
+      animation: blink 1s step-end infinite;
+    }
+ 
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+ 
+    .marquee-wrap {
+      overflow: hidden;
+      border-top: 1px solid rgba(57,255,20,0.2);
+      border-bottom: 1px solid rgba(57,255,20,0.2);
+      background: rgba(57,255,20,0.05);
+      padding: 6px 0;
+      margin-bottom: 22px;
+    }
+ 
+    .marquee {
+      display: flex;
+      white-space: nowrap;
+      animation: march 18s linear infinite;
+      font-family: 'VT323', monospace;
+      font-size: 16px;
+      color: var(--amber);
+      letter-spacing: 0.08em;
+      text-shadow: 0 0 6px var(--amber);
+    }
+ 
+    .marquee span { padding-right: 60px; }
+ 
+    @keyframes march {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+ 
+    .profile {
+      display: flex;
+      gap: 22px;
+      align-items: flex-start;
+      margin-bottom: 22px;
+    }
+ 
+    .avatar-box {
+      flex-shrink: 0;
+      position: relative;
+    }
+ 
+    .avatar-frame {
+      border: 2px solid var(--green);
+      box-shadow: 0 0 10px var(--green), inset 0 0 8px rgba(57,255,20,0.1);
+      width: 108px;
+      height: 108px;
+      position: relative;
+      overflow: hidden;
+    }
+ 
+    .avatar-frame img {
+      width: 100%;
+      height: 100%;
       object-fit: cover;
-      border: 3px solid #9b59b6;
-      box-shadow: 0 0 25px rgba(155, 89, 182, 0.6);
+      image-rendering: pixelated;
+      filter: sepia(0.1) saturate(1.2) hue-rotate(80deg) brightness(0.9);
+      display: block;
     }
-
-    .content {
-      flex: 1;
+ 
+    .avatar-frame .fallback {
+      width: 100%;
+      height: 100%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      background: repeating-linear-gradient(
+        45deg,
+        rgba(57,255,20,0.07) 0px, rgba(57,255,20,0.07) 2px,
+        transparent 2px, transparent 8px
+      );
     }
-
-    h1 {
-      font-size: 32px;
+ 
+    .avatar-label {
+      font-family: 'VT323', monospace;
+      font-size: 13px;
+      color: var(--dim);
+      text-align: center;
+      margin-top: 4px;
+      letter-spacing: 0.1em;
+    }
+ 
+    .avatar-box::before,
+    .avatar-box::after {
+      content: '+';
+      position: absolute;
+      font-size: 14px;
+      color: var(--amber);
+      line-height: 1;
+    }
+    .avatar-box::before { top: -7px; left: -7px; }
+    .avatar-box::after  { top: -7px; right: -7px; }
+ 
+    .info { flex: 1; }
+ 
+    .info-tag {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 7px;
+      color: var(--amber);
+      letter-spacing: 0.12em;
       margin-bottom: 10px;
-      background: linear-gradient(90deg, #c084fc, #9b59b6);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 8px var(--amber);
     }
-
-    p {
-      opacity: 0.75;
-      margin-bottom: 20px;
-      line-height: 1.6;
+ 
+    h1 {
+      font-family: 'VT323', monospace;
+      font-size: clamp(42px, 8vw, 58px);
+      line-height: 1;
+      color: var(--green);
+      text-shadow: 0 0 20px var(--green), 2px 2px 0 rgba(57,255,20,0.25);
+      margin-bottom: 10px;
+      letter-spacing: 0.02em;
+      animation: glow-pulse 3s ease-in-out infinite alternate;
     }
-
+ 
+    @keyframes glow-pulse {
+      from { text-shadow: 0 0 12px var(--green), 2px 2px 0 rgba(57,255,20,0.2); }
+      to   { text-shadow: 0 0 28px var(--green), 0 0 50px rgba(57,255,20,0.4), 2px 2px 0 rgba(57,255,20,0.25); }
+    }
+ 
+    .bio {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--dim);
+      letter-spacing: 0.03em;
+    }
+ 
+    .bio em {
+      font-style: normal;
+      color: var(--cyan);
+      text-shadow: 0 0 6px var(--cyan);
+    }
+ 
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 20px 0;
+      color: var(--dim);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+    }
+ 
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--green), transparent);
+      opacity: 0.4;
+    }
+ 
     .links {
       display: flex;
-      gap: 12px;
       flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 22px;
     }
-
+ 
     .links a {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
       text-decoration: none;
-      color: white;
-      padding: 10px 16px;
-      border-radius: 10px;
-      font-size: 14px;
-      background: linear-gradient(135deg, #6d28d9, #9b59b6);
-      box-shadow: 0 0 15px rgba(155, 89, 182, 0.4);
-      transition: all 0.2s ease;
+      color: var(--black);
+      background: var(--green);
+      padding: 9px 14px;
+      letter-spacing: 0.08em;
+      border: 2px solid var(--green2);
+      box-shadow: 3px 3px 0 var(--green2);
+      transition: all 0.08s steps(1);
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
-
+ 
     .links a:hover {
-      transform: translateY(-2px) scale(1.05);
-      box-shadow: 0 0 25px rgba(155, 89, 182, 0.7);
+      background: var(--amber);
+      border-color: #e65100;
+      box-shadow: 3px 3px 0 #e65100;
+      color: var(--black);
+      transform: translate(-1px, -1px);
     }
-
+ 
     .links a:active {
-      transform: scale(0.98);
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0 var(--green2);
     }
-
-    @media (max-width: 650px) {
-      .card {
-        flex-direction: column;
-        text-align: center;
-      }
-
-      .avatar {
-        margin-bottom: 10px;
-      }
-
-      .links {
-        justify-content: center;
-      }
+ 
+    .links a.pink {
+      background: var(--pink);
+      border-color: #c2185b;
+      box-shadow: 3px 3px 0 #c2185b;
+    }
+ 
+    .links a.cyan {
+      background: var(--cyan);
+      border-color: #0097a7;
+      box-shadow: 3px 3px 0 #0097a7;
+    }
+ 
+    .links a.amber {
+      background: var(--amber);
+      border-color: #e65100;
+      box-shadow: 3px 3px 0 #e65100;
+    }
+ 
+    .statusbar {
+      border-top: 1px solid rgba(57,255,20,0.25);
+      padding-top: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+ 
+    .status-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--dim);
+    }
+ 
+    .dot {
+      width: 8px;
+      height: 8px;
+      background: var(--green);
+      box-shadow: 0 0 6px var(--green);
+      animation: blink 1.4s step-end infinite;
+    }
+ 
+    .status-right {
+      font-size: 11px;
+      color: rgba(57,255,20,0.3);
+      letter-spacing: 0.05em;
+    }
+ 
+    @media (max-width: 500px) {
+      .window-body { padding: 18px 16px 16px; }
+      .profile { flex-direction: column; align-items: center; text-align: center; }
+      .avatar-box::before, .avatar-box::after { display: none; }
+      h1 { font-size: 48px; }
+      .links { justify-content: center; }
+      .statusbar { justify-content: center; }
     }
   </style>
 </head>
 <body>
-
-  <div class="card">
-    <img class="avatar" src="art.webp">
-
-    <div class="content">
-      <h1>Romiee 🐾</h1>
-      <p>
-        Hey, I’m Romiee. Welcome to my site!  
-        I make stuff, play games, and exist as a silly puppyyy :3
-      </p>
-      
+  <div class="bg-grid"></div>
+  <div class="crt">
+    <div class="window">
+      <div class="titlebar">
+        <span>romiee.exe — profile.html</span>
+        <div class="titlebar-buttons">
+          <span>_</span>
+          <span>□</span>
+          <span>×</span>
+        </div>
+      </div>
+ 
+      <div class="window-body">
+        <div class="prompt-line">
+          C:\USERS\ROMIEE&gt; LOAD profile.exe... OK
+          <span class="cursor"></span>
+        </div>
+ 
+        <div class="marquee-wrap">
+          <div class="marquee">
+            <span>✦ welcome to my page !! ✦ maker of stuff ✦ i'm just a silly puppyyy :3 ✦</span>
+            <span>✦ welcome to my page !! ✦ maker of stuff ✦ i'm just a silly puppyyy :3 ✦</span>
+          </div>
+        </div>
+ 
+        <div class="profile">
+          <div class="avatar-box">
+            <div class="avatar-frame">
+              <img src="art.webp" alt="Romiee"
+                onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+              <div class="fallback">🐾</div>
+            </div>
+            <div class="avatar-label">[ user.img ]</div>
+          </div>
+ 
+          <div class="info">
+            <div class="info-tag">&gt;&gt; USER PROFILE &lt;&lt;</div>
+            <h1>Romiee 🐾</h1>
+            <p class="bio">
+              hey!! i'm romiee. i make <em>things maybe</em>,
+              play <em>games</em>, and exist as a
+              silly puppyyy :3<br>
+              glad u found this page !!
+            </p>
+          </div>
+        </div>
+ 
+        <div class="divider">// LINKS //</div>
+ 
+        <div class="links">
+          <a href="#" class="cyan"><span>🐦</span> TWITTER</a>
+          <a href="#" class="pink"><span>💜</span> TWITCH</a>
+          <a href="#"><span>🎮</span> DISCORD</a>
+          <a href="#" class="amber"><span>🎨</span> ART</a>
+        </div>
+ 
+        <div class="statusbar">
+          <div class="status-left">
+            <div class="dot"></div>
+            arf arf :3 — probably being gay :3
+          </div>
+          <div class="status-right">SYS:OK // MEM:48% // VER:2.0</div>
+        </div>
       </div>
     </div>
   </div>
-
 </body>
 </html>
