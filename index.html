@@ -7,27 +7,30 @@
   <link href="https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
     :root {
-      --black:   #0a0a0f;
-      --green:   #39ff14;
-      --green2:  #00c853;
-      --amber:   #ffb300;
-      --pink:    #ff69b4;
-      --cyan:    #00e5ff;
-      --white:   #e8ffe8;
-      --dim:     rgba(57,255,20,0.55);
-      --scanline: rgba(0,0,0,0.18);
+      --black:    #08010f;
+      --surface:  #0d0118;
+      --p1:       #bf00ff;
+      --p2:       #9b30ff;
+      --p3:       #cc66ff;
+      --p4:       #e8b4ff;
+      --pink:     #ff4dff;
+      --cyan:     #df80ff;
+      --dim:      rgba(191,0,255,0.55);
+      --dimtext:  rgba(232,180,255,0.6);
+      --scanline: rgba(0,0,0,0.22);
     }
- 
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
- 
+
     html, body {
       min-height: 100vh;
       background: var(--black);
-      color: var(--green);
+      color: var(--p4);
       font-family: 'Share Tech Mono', monospace;
-      cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Crect x='0' y='0' width='16' height='16' fill='%2339ff14'/%3E%3C/svg%3E") 8 8, crosshair;
+      cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Crect width='16' height='16' fill='%23bf00ff'/%3E%3C/svg%3E") 8 8, crosshair;
     }
- 
+
+    /* CRT wrapper */
     .crt {
       min-height: 100vh;
       display: flex;
@@ -37,7 +40,8 @@
       position: relative;
       overflow: hidden;
     }
- 
+
+    /* scanlines */
     .crt::before {
       content: '';
       position: fixed;
@@ -51,62 +55,88 @@
       );
       pointer-events: none;
       z-index: 100;
-      animation: flicker 0.15s infinite;
+      animation: flicker 0.14s infinite;
     }
- 
+
+    /* vignette */
     .crt::after {
       content: '';
       position: fixed;
       inset: 0;
       background: radial-gradient(ellipse at center,
-        transparent 55%,
-        rgba(0,0,0,0.75) 100%);
+        transparent 50%,
+        rgba(8,1,15,0.85) 100%);
       pointer-events: none;
       z-index: 99;
     }
- 
+
     @keyframes flicker {
-      0%   { opacity: 1; }
-      92%  { opacity: 1; }
-      93%  { opacity: 0.85; }
-      94%  { opacity: 1; }
-      96%  { opacity: 0.9; }
-      100% { opacity: 1; }
+      0%,100% { opacity: 1; }
+      93%      { opacity: 0.82; }
+      96%      { opacity: 0.92; }
     }
- 
+
+    /* purple grid */
     .bg-grid {
       position: fixed;
       inset: 0;
       background-image:
-        linear-gradient(rgba(57,255,20,0.06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(57,255,20,0.06) 1px, transparent 1px);
+        linear-gradient(rgba(191,0,255,0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(191,0,255,0.07) 1px, transparent 1px);
       background-size: 32px 32px;
       z-index: 0;
     }
- 
+
+    /* ambient glow blobs */
+    .blob {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(90px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .blob-1 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(120,0,200,0.25), transparent 70%);
+      top: -100px; left: -100px;
+      animation: bdrift 10s ease-in-out infinite alternate;
+    }
+    .blob-2 {
+      width: 320px; height: 320px;
+      background: radial-gradient(circle, rgba(191,0,255,0.18), transparent 70%);
+      bottom: -80px; right: -80px;
+      animation: bdrift 14s ease-in-out infinite alternate-reverse;
+    }
+    @keyframes bdrift {
+      from { transform: translate(0,0); }
+      to   { transform: translate(25px, 18px); }
+    }
+
+    /* ── Window ── */
     .window {
       position: relative;
       z-index: 10;
       width: 100%;
       max-width: 660px;
-      border: 2px solid var(--green);
+      border: 2px solid var(--p1);
       box-shadow:
         0 0 0 1px var(--black),
-        0 0 12px var(--green),
-        0 0 40px rgba(57,255,20,0.15),
-        inset 0 0 30px rgba(57,255,20,0.04);
-      animation: boot 0.6s steps(1) both;
+        0 0 16px var(--p1),
+        0 0 50px rgba(191,0,255,0.25),
+        inset 0 0 40px rgba(191,0,255,0.05);
+      animation: boot 0.65s steps(1) both;
     }
- 
+
     @keyframes boot {
       0%  { opacity: 0; transform: scaleY(0.02); }
       30% { opacity: 1; transform: scaleY(0.02); }
-      60% { transform: scaleY(1.01); }
+      65% { transform: scaleY(1.015); }
       100%{ transform: scaleY(1); }
     }
- 
+
+    /* title bar */
     .titlebar {
-      background: var(--green);
+      background: var(--p1);
       color: var(--black);
       font-family: 'Press Start 2P', monospace;
       font-size: 9px;
@@ -116,184 +146,177 @@
       justify-content: space-between;
       letter-spacing: 0.05em;
       user-select: none;
+      text-shadow: none;
     }
- 
-    .titlebar-buttons {
-      display: flex;
-      gap: 6px;
-    }
- 
-    .titlebar-buttons span {
+
+    .tb-buttons { display: flex; gap: 6px; }
+    .tb-buttons span {
       display: inline-block;
-      width: 12px;
-      height: 12px;
+      width: 12px; height: 12px;
       border: 2px solid var(--black);
       background: var(--black);
       font-size: 8px;
       line-height: 9px;
       text-align: center;
       cursor: pointer;
-      color: var(--green);
+      color: var(--p1);
     }
- 
+
+    /* body */
     .window-body {
-      background: var(--black);
-      padding: 28px 28px 24px;
+      background: var(--surface);
+      padding: 26px 28px 22px;
     }
- 
+
+    /* prompt */
     .prompt-line {
       font-size: 11px;
       color: var(--dim);
-      margin-bottom: 22px;
+      margin-bottom: 20px;
       letter-spacing: 0.05em;
     }
- 
-    .prompt-line .cursor {
+    .cursor {
       display: inline-block;
-      width: 8px;
-      height: 13px;
-      background: var(--green);
+      width: 8px; height: 13px;
+      background: var(--p1);
       vertical-align: middle;
       margin-left: 3px;
       animation: blink 1s step-end infinite;
+      box-shadow: 0 0 6px var(--p1);
     }
- 
     @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0; }
+      0%,100% { opacity: 1; }
+      50%      { opacity: 0; }
     }
- 
+
+    /* marquee */
     .marquee-wrap {
       overflow: hidden;
-      border-top: 1px solid rgba(57,255,20,0.2);
-      border-bottom: 1px solid rgba(57,255,20,0.2);
-      background: rgba(57,255,20,0.05);
+      border-top: 1px solid rgba(191,0,255,0.3);
+      border-bottom: 1px solid rgba(191,0,255,0.3);
+      background: rgba(191,0,255,0.07);
       padding: 6px 0;
       margin-bottom: 22px;
     }
- 
     .marquee {
       display: flex;
       white-space: nowrap;
-      animation: march 18s linear infinite;
+      animation: march 20s linear infinite;
       font-family: 'VT323', monospace;
-      font-size: 16px;
-      color: var(--amber);
+      font-size: 17px;
+      color: var(--p3);
       letter-spacing: 0.08em;
-      text-shadow: 0 0 6px var(--amber);
+      text-shadow: 0 0 8px var(--p2);
     }
- 
     .marquee span { padding-right: 60px; }
- 
     @keyframes march {
       from { transform: translateX(0); }
       to   { transform: translateX(-50%); }
     }
- 
+
+    /* profile */
     .profile {
       display: flex;
       gap: 22px;
       align-items: flex-start;
       margin-bottom: 22px;
     }
- 
-    .avatar-box {
-      flex-shrink: 0;
-      position: relative;
-    }
- 
+
+    .avatar-box { flex-shrink: 0; position: relative; }
+
     .avatar-frame {
-      border: 2px solid var(--green);
-      box-shadow: 0 0 10px var(--green), inset 0 0 8px rgba(57,255,20,0.1);
-      width: 108px;
-      height: 108px;
-      position: relative;
+      border: 2px solid var(--p1);
+      box-shadow: 0 0 14px var(--p1), inset 0 0 10px rgba(191,0,255,0.15);
+      width: 108px; height: 108px;
       overflow: hidden;
+      position: relative;
     }
- 
     .avatar-frame img {
-      width: 100%;
-      height: 100%;
+      width: 100%; height: 100%;
       object-fit: cover;
       image-rendering: pixelated;
-      filter: sepia(0.1) saturate(1.2) hue-rotate(80deg) brightness(0.9);
+      filter: sepia(0.3) saturate(2) hue-rotate(250deg) brightness(0.85);
       display: block;
     }
- 
     .avatar-frame .fallback {
-      width: 100%;
-      height: 100%;
+      width: 100%; height: 100%;
       display: none;
       align-items: center;
       justify-content: center;
       font-size: 48px;
       background: repeating-linear-gradient(
         45deg,
-        rgba(57,255,20,0.07) 0px, rgba(57,255,20,0.07) 2px,
+        rgba(191,0,255,0.08) 0px, rgba(191,0,255,0.08) 2px,
         transparent 2px, transparent 8px
       );
     }
- 
+
     .avatar-label {
       font-family: 'VT323', monospace;
       font-size: 13px;
       color: var(--dim);
       text-align: center;
-      margin-top: 4px;
+      margin-top: 5px;
       letter-spacing: 0.1em;
     }
- 
+
+    /* corner crosses */
     .avatar-box::before,
     .avatar-box::after {
-      content: '+';
+      content: '✦';
       position: absolute;
-      font-size: 14px;
-      color: var(--amber);
+      font-size: 12px;
+      color: var(--p3);
+      text-shadow: 0 0 8px var(--p2);
       line-height: 1;
+      z-index: 2;
     }
-    .avatar-box::before { top: -7px; left: -7px; }
-    .avatar-box::after  { top: -7px; right: -7px; }
- 
+    .avatar-box::before { top: -8px; left: -8px; }
+    .avatar-box::after  { top: -8px; right: -8px; }
+
     .info { flex: 1; }
- 
+
     .info-tag {
       font-family: 'Press Start 2P', monospace;
       font-size: 7px;
-      color: var(--amber);
+      color: var(--p3);
       letter-spacing: 0.12em;
       margin-bottom: 10px;
-      text-shadow: 0 0 8px var(--amber);
+      text-shadow: 0 0 10px var(--p2);
     }
- 
+
     h1 {
       font-family: 'VT323', monospace;
-      font-size: clamp(42px, 8vw, 58px);
+      font-size: clamp(44px, 8vw, 60px);
       line-height: 1;
-      color: var(--green);
-      text-shadow: 0 0 20px var(--green), 2px 2px 0 rgba(57,255,20,0.25);
+      color: var(--p3);
+      text-shadow:
+        0 0 18px var(--p1),
+        0 0 40px rgba(191,0,255,0.5),
+        2px 2px 0 rgba(120,0,200,0.4);
       margin-bottom: 10px;
       letter-spacing: 0.02em;
       animation: glow-pulse 3s ease-in-out infinite alternate;
     }
- 
+
     @keyframes glow-pulse {
-      from { text-shadow: 0 0 12px var(--green), 2px 2px 0 rgba(57,255,20,0.2); }
-      to   { text-shadow: 0 0 28px var(--green), 0 0 50px rgba(57,255,20,0.4), 2px 2px 0 rgba(57,255,20,0.25); }
+      from { text-shadow: 0 0 14px var(--p1), 2px 2px 0 rgba(120,0,200,0.35); }
+      to   { text-shadow: 0 0 30px var(--p1), 0 0 60px rgba(191,0,255,0.5), 2px 2px 0 rgba(120,0,200,0.4); }
     }
- 
+
     .bio {
       font-size: 15px;
-      line-height: 1.7;
-      color: var(--dim);
+      line-height: 1.75;
+      color: var(--dimtext);
       letter-spacing: 0.03em;
     }
- 
     .bio em {
       font-style: normal;
-      color: var(--cyan);
-      text-shadow: 0 0 6px var(--cyan);
+      color: var(--p4);
+      text-shadow: 0 0 8px var(--p2);
     }
- 
+
+    /* divider */
     .divider {
       display: flex;
       align-items: center;
@@ -303,72 +326,69 @@
       font-size: 12px;
       letter-spacing: 0.1em;
     }
- 
     .divider::before,
     .divider::after {
       content: '';
       flex: 1;
       height: 1px;
-      background: linear-gradient(90deg, transparent, var(--green), transparent);
-      opacity: 0.4;
+      background: linear-gradient(90deg, transparent, var(--p1), transparent);
+      opacity: 0.5;
     }
- 
+
+    /* links */
     .links {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       margin-bottom: 22px;
     }
- 
+
     .links a {
       font-family: 'Press Start 2P', monospace;
       font-size: 8px;
       text-decoration: none;
       color: var(--black);
-      background: var(--green);
+      background: var(--p2);
       padding: 9px 14px;
       letter-spacing: 0.08em;
-      border: 2px solid var(--green2);
-      box-shadow: 3px 3px 0 var(--green2);
+      border: 2px solid #6600cc;
+      box-shadow: 3px 3px 0 #6600cc, 0 0 12px rgba(155,48,255,0.4);
       transition: all 0.08s steps(1);
       display: flex;
       align-items: center;
       gap: 6px;
     }
- 
+
     .links a:hover {
-      background: var(--amber);
-      border-color: #e65100;
-      box-shadow: 3px 3px 0 #e65100;
-      color: var(--black);
+      background: var(--pink);
+      border-color: #aa00aa;
+      box-shadow: 3px 3px 0 #aa00aa, 0 0 18px rgba(255,77,255,0.5);
       transform: translate(-1px, -1px);
     }
- 
     .links a:active {
       transform: translate(2px, 2px);
-      box-shadow: 1px 1px 0 var(--green2);
+      box-shadow: 1px 1px 0 #6600cc;
     }
- 
-    .links a.pink {
+
+    .links a.v2 {
+      background: #6600cc;
+      border-color: #3d007a;
+      box-shadow: 3px 3px 0 #3d007a, 0 0 10px rgba(102,0,204,0.4);
+    }
+    .links a.v3 {
+      background: var(--p3);
+      border-color: #8800cc;
+      box-shadow: 3px 3px 0 #8800cc, 0 0 10px rgba(204,102,255,0.35);
+    }
+    .links a.v4 {
       background: var(--pink);
-      border-color: #c2185b;
-      box-shadow: 3px 3px 0 #c2185b;
+      border-color: #aa00aa;
+      box-shadow: 3px 3px 0 #aa00aa, 0 0 10px rgba(255,77,255,0.35);
     }
- 
-    .links a.cyan {
-      background: var(--cyan);
-      border-color: #0097a7;
-      box-shadow: 3px 3px 0 #0097a7;
-    }
- 
-    .links a.amber {
-      background: var(--amber);
-      border-color: #e65100;
-      box-shadow: 3px 3px 0 #e65100;
-    }
- 
+
+    /* status */
     .statusbar {
-      border-top: 1px solid rgba(57,255,20,0.25);
+      border-top: 1px solid rgba(191,0,255,0.25);
       padding-top: 14px;
       display: flex;
       align-items: center;
@@ -376,34 +396,33 @@
       flex-wrap: wrap;
       gap: 8px;
     }
- 
+
     .status-left {
       display: flex;
       align-items: center;
       gap: 8px;
       font-size: 12px;
-      color: var(--dim);
+      color: var(--dimtext);
     }
- 
+
     .dot {
-      width: 8px;
-      height: 8px;
-      background: var(--green);
-      box-shadow: 0 0 6px var(--green);
-      animation: blink 1.4s step-end infinite;
+      width: 8px; height: 8px;
+      background: var(--p1);
+      box-shadow: 0 0 8px var(--p1), 0 0 16px rgba(191,0,255,0.5);
+      animation: blink 1.6s step-end infinite;
     }
- 
+
     .status-right {
       font-size: 11px;
-      color: rgba(57,255,20,0.3);
+      color: rgba(191,0,255,0.35);
       letter-spacing: 0.05em;
     }
- 
+
     @media (max-width: 500px) {
       .window-body { padding: 18px 16px 16px; }
       .profile { flex-direction: column; align-items: center; text-align: center; }
       .avatar-box::before, .avatar-box::after { display: none; }
-      h1 { font-size: 48px; }
+      h1 { font-size: 50px; }
       .links { justify-content: center; }
       .statusbar { justify-content: center; }
     }
@@ -411,30 +430,31 @@
 </head>
 <body>
   <div class="bg-grid"></div>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+
   <div class="crt">
     <div class="window">
       <div class="titlebar">
         <span>romiee.exe — profile.html</span>
-        <div class="titlebar-buttons">
-          <span>_</span>
-          <span>□</span>
-          <span>×</span>
+        <div class="tb-buttons">
+          <span>_</span><span>□</span><span>×</span>
         </div>
       </div>
- 
+
       <div class="window-body">
         <div class="prompt-line">
           C:\USERS\ROMIEE&gt; LOAD profile.exe... OK
           <span class="cursor"></span>
         </div>
- 
+
         <div class="marquee-wrap">
           <div class="marquee">
-            <span>✦ welcome to my page !! ✦ maker of stuff ✦ i'm just a silly puppyyy :3 ✦</span>
-            <span>✦ welcome to my page !! ✦ maker of stuff ✦ i'm just a silly puppyyy :3 ✦</span>
+            <span>✦ welcome to my page !! ✦ maker of things i think ✦ silly puppyyy :3 ✦ woof woof ✦</span>
+            <span>✦ welcome to my page !! ✦ maker of things i think ✦ silly puppyyy :3 ✦ woof woof ✦</span>
           </div>
         </div>
- 
+
         <div class="profile">
           <div class="avatar-box">
             <div class="avatar-frame">
@@ -444,34 +464,33 @@
             </div>
             <div class="avatar-label">[ user.img ]</div>
           </div>
- 
+
           <div class="info">
             <div class="info-tag">&gt;&gt; USER PROFILE &lt;&lt;</div>
             <h1>Romiee 🐾</h1>
             <p class="bio">
               hey!! i'm romiee. i make <em>things maybe</em>,
               play <em>games</em>, and exist as a
-              silly puppyyy :3<br>
-              glad u found this page !!
+              silly puppyyy :3<br>glad u found this page !!
+              I luv my boyfrien i <3 colbyyy :3
             </p>
           </div>
         </div>
- 
+
         <div class="divider">// LINKS //</div>
- 
+
         <div class="links">
-          <a href="#" class="cyan"><span>🐦</span> TWITTER</a>
-          <a href="#" class="pink"><span>💜</span> TWITCH</a>
-          <a href="#"><span>🎮</span> DISCORD</a>
-          <a href="#" class="amber"><span>🎨</span> ART</a>
+          <a href="https://x.com/sillyromiee" class="v3"><span>🐦</span> TWITTER</a>
+          <a href="https://www.youtube.com/@sillyromiee"><span>💜</span> YOUTUBE</a>
+          <a href="https://www.roblox.com/users/136959169/profile" class="v2"><span>🎮</span> ROBLOX</a>
         </div>
- 
+
         <div class="statusbar">
           <div class="status-left">
             <div class="dot"></div>
-            arf arf :3 — probably being gay :3
+            wruff arf arf — probably being gay asf
           </div>
-          <div class="status-right">SYS:OK // MEM:48% // VER:2.0</div>
+          <div class="status-right">SYS:OK // MEM:67% // VER:2.0</div>
         </div>
       </div>
     </div>
