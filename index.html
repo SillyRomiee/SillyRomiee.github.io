@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Romiee 🐾 - welcome 2 my page!!</title>
+  <title>Romiee 🐾 welcome 2 my page!!</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
@@ -14,7 +14,6 @@
       --p3:       #cc66ff;
       --p4:       #e8b4ff;
       --pink:     #ff4dff;
-      --cyan:     #df80ff;
       --dim:      rgba(191,0,255,0.55);
       --dimtext:  rgba(232,180,255,0.6);
       --scanline: rgba(0,0,0,0.22);
@@ -23,477 +22,1031 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     html, body {
-      min-height: 100vh;
       background: var(--black);
       color: var(--p4);
       font-family: 'Share Tech Mono', monospace;
       cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Crect width='16' height='16' fill='%23bf00ff'/%3E%3C/svg%3E") 8 8, crosshair;
     }
 
-    /* CRT wrapper */
-    .crt {
-      min-height: 100vh;
+    .crt-overlay {
+      position: fixed; inset: 0;
+      background: repeating-linear-gradient(to bottom, var(--scanline) 0px, var(--scanline) 1px, transparent 1px, transparent 3px);
+      pointer-events: none; z-index: 200;
+      animation: flicker 0.14s infinite;
+    }
+    .crt-vignette {
+      position: fixed; inset: 0;
+      background: radial-gradient(ellipse at center, transparent 50%, rgba(8,1,15,0.88) 100%);
+      pointer-events: none; z-index: 199;
+    }
+    @keyframes flicker { 0%,100%{opacity:1} 93%{opacity:0.82} 96%{opacity:0.92} }
+
+    .bg-grid {
+      position: fixed; inset: 0;
+      background-image: linear-gradient(rgba(191,0,255,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(191,0,255,0.07) 1px, transparent 1px);
+      background-size: 32px 32px; z-index: 0;
+    }
+    .blob { position: fixed; border-radius: 50%; filter: blur(90px); pointer-events: none; z-index: 0; }
+    .blob-1 { width:500px;height:500px; background:radial-gradient(circle,rgba(120,0,200,0.22),transparent 70%); top:-120px;left:-120px; animation:bdrift 10s ease-in-out infinite alternate; }
+    .blob-2 { width:380px;height:380px; background:radial-gradient(circle,rgba(191,0,255,0.16),transparent 70%); bottom:-100px;right:-100px; animation:bdrift 14s ease-in-out infinite alternate-reverse; }
+    .blob-3 { width:280px;height:280px; background:radial-gradient(circle,rgba(255,77,255,0.1),transparent 70%); top:40%;left:55%; animation:bdrift 18s ease-in-out infinite alternate; }
+    @keyframes bdrift { from{transform:translate(0,0)} to{transform:translate(28px,20px)} }
+
+    /* ── Scroll-snap layout ── */
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .desktop {
+      position: relative; z-index: 10;
+      height: 100vh;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .snap-slide {
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+      height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 24px;
-      position: relative;
-      overflow: hidden;
     }
 
-    /* scanlines */
-    .crt::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background: repeating-linear-gradient(
-        to bottom,
-        var(--scanline) 0px,
-        var(--scanline) 1px,
-        transparent 1px,
-        transparent 3px
-      );
-      pointer-events: none;
-      z-index: 100;
-      animation: flicker 0.14s infinite;
-    }
-
-    /* vignette */
-    .crt::after {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background: radial-gradient(ellipse at center,
-        transparent 50%,
-        rgba(8,1,15,0.85) 100%);
-      pointer-events: none;
-      z-index: 99;
-    }
-
-    @keyframes flicker {
-      0%,100% { opacity: 1; }
-      93%      { opacity: 0.82; }
-      96%      { opacity: 0.92; }
-    }
-
-    /* purple grid */
-    .bg-grid {
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(191,0,255,0.07) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(191,0,255,0.07) 1px, transparent 1px);
-      background-size: 32px 32px;
-      z-index: 0;
-    }
-
-    /* ambient glow blobs */
-    .blob {
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(90px);
-      pointer-events: none;
-      z-index: 0;
-    }
-    .blob-1 {
-      width: 400px; height: 400px;
-      background: radial-gradient(circle, rgba(120,0,200,0.25), transparent 70%);
-      top: -100px; left: -100px;
-      animation: bdrift 10s ease-in-out infinite alternate;
-    }
-    .blob-2 {
-      width: 320px; height: 320px;
-      background: radial-gradient(circle, rgba(191,0,255,0.18), transparent 70%);
-      bottom: -80px; right: -80px;
-      animation: bdrift 14s ease-in-out infinite alternate-reverse;
-    }
-    @keyframes bdrift {
-      from { transform: translate(0,0); }
-      to   { transform: translate(25px, 18px); }
-    }
-
-    /* ── Window ── */
-    .window {
-      position: relative;
-      z-index: 10;
+    .snap-slide > .window {
       width: 100%;
-      max-width: 660px;
-      border: 2px solid var(--p1);
-      box-shadow:
-        0 0 0 1px var(--black),
-        0 0 16px var(--p1),
-        0 0 50px rgba(191,0,255,0.25),
-        inset 0 0 40px rgba(191,0,255,0.05);
-      animation: boot 0.65s steps(1) both;
+      max-width: 700px;
+      max-height: calc(100vh - 48px);
+      overflow-y: auto;
     }
 
-    @keyframes boot {
-      0%  { opacity: 0; transform: scaleY(0.02); }
-      30% { opacity: 1; transform: scaleY(0.02); }
-      65% { transform: scaleY(1.015); }
-      100%{ transform: scaleY(1); }
-    }
-
-    /* title bar */
-    .titlebar {
-      background: var(--p1);
-      color: var(--black);
-      font-family: 'Press Start 2P', monospace;
-      font-size: 9px;
-      padding: 7px 12px;
+    /* scroll indicator */
+    .scroll-hint {
+      position: fixed;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 150;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: space-between;
-      letter-spacing: 0.05em;
-      user-select: none;
-      text-shadow: none;
+      gap: 4px;
+      pointer-events: none;
+      animation: hint-fade 2.5s ease-in-out 1.2s forwards;
+      opacity: 0;
     }
-
-    .tb-buttons { display: flex; gap: 6px; }
-    .tb-buttons span {
-      display: inline-block;
-      width: 12px; height: 12px;
-      border: 2px solid var(--black);
-      background: var(--black);
-      font-size: 8px;
-      line-height: 9px;
-      text-align: center;
-      cursor: pointer;
-      color: var(--p1);
+    @keyframes hint-fade {
+      0%   { opacity: 0; transform: translateX(-50%) translateY(0); }
+      20%  { opacity: 1; }
+      80%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+      100% { opacity: 0; transform: translateX(-50%) translateY(6px); }
     }
-
-    /* body */
-    .window-body {
-      background: var(--surface);
-      padding: 26px 28px 22px;
-    }
-
-    /* prompt */
-    .prompt-line {
-      font-size: 11px;
-      color: var(--dim);
-      margin-bottom: 20px;
-      letter-spacing: 0.05em;
-    }
-    .cursor {
-      display: inline-block;
-      width: 8px; height: 13px;
-      background: var(--p1);
-      vertical-align: middle;
-      margin-left: 3px;
-      animation: blink 1s step-end infinite;
-      box-shadow: 0 0 6px var(--p1);
-    }
-    @keyframes blink {
-      0%,100% { opacity: 1; }
-      50%      { opacity: 0; }
-    }
-
-    /* marquee */
-    .marquee-wrap {
-      overflow: hidden;
-      border-top: 1px solid rgba(191,0,255,0.3);
-      border-bottom: 1px solid rgba(191,0,255,0.3);
-      background: rgba(191,0,255,0.07);
-      padding: 6px 0;
-      margin-bottom: 22px;
-    }
-    .marquee {
-      display: flex;
-      white-space: nowrap;
-      animation: march 20s linear infinite;
-      font-family: 'VT323', monospace;
-      font-size: 17px;
-      color: var(--p3);
-      letter-spacing: 0.08em;
-      text-shadow: 0 0 8px var(--p2);
-    }
-    .marquee span { padding-right: 60px; }
-    @keyframes march {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-50%); }
-    }
-
-    /* profile */
-    .profile {
-      display: flex;
-      gap: 22px;
-      align-items: flex-start;
-      margin-bottom: 22px;
-    }
-
-    .avatar-box { flex-shrink: 0; position: relative; }
-
-    .avatar-frame {
-      border: 2px solid var(--p1);
-      box-shadow: 0 0 14px var(--p1), inset 0 0 10px rgba(191,0,255,0.15);
-      width: 108px; height: 108px;
-      overflow: hidden;
-      position: relative;
-    }
-    .avatar-frame img {
-      width: 100%; height: 100%;
-      object-fit: cover;
-      image-rendering: pixelated;
-      filter: sepia(0.3) saturate(2) hue-rotate(250deg) brightness(0.85);
-      display: block;
-    }
-    .avatar-frame .fallback {
-      width: 100%; height: 100%;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      font-size: 48px;
-      background: repeating-linear-gradient(
-        45deg,
-        rgba(191,0,255,0.08) 0px, rgba(191,0,255,0.08) 2px,
-        transparent 2px, transparent 8px
-      );
-    }
-
-    .avatar-label {
-      font-family: 'VT323', monospace;
-      font-size: 13px;
-      color: var(--dim);
-      text-align: center;
-      margin-top: 5px;
-      letter-spacing: 0.1em;
-    }
-
-    /* corner crosses */
-    .avatar-box::before,
-    .avatar-box::after {
-      content: '✦';
-      position: absolute;
-      font-size: 12px;
-      color: var(--p3);
-      text-shadow: 0 0 8px var(--p2);
-      line-height: 1;
-      z-index: 2;
-    }
-    .avatar-box::before { top: -8px; left: -8px; }
-    .avatar-box::after  { top: -8px; right: -8px; }
-
-    .info { flex: 1; }
-
-    .info-tag {
+    .scroll-hint-text {
       font-family: 'Press Start 2P', monospace;
       font-size: 7px;
       color: var(--p3);
-      letter-spacing: 0.12em;
-      margin-bottom: 10px;
-      text-shadow: 0 0 10px var(--p2);
+      letter-spacing: .1em;
+      text-shadow: 0 0 8px var(--p1);
     }
+    .scroll-hint-arrow {
+      width: 10px; height: 10px;
+      border-right: 2px solid var(--p1);
+      border-bottom: 2px solid var(--p1);
+      transform: rotate(45deg);
+      box-shadow: 2px 2px 6px var(--p1);
+      animation: arrow-bob 0.7s ease-in-out infinite alternate;
+    }
+    @keyframes arrow-bob { from { transform: rotate(45deg) translate(0,0); } to { transform: rotate(45deg) translate(2px,2px); } }
 
-    h1 {
-      font-family: 'VT323', monospace;
-      font-size: clamp(44px, 8vw, 60px);
-      line-height: 1;
-      color: var(--p3);
-      text-shadow:
-        0 0 18px var(--p1),
-        0 0 40px rgba(191,0,255,0.5),
-        2px 2px 0 rgba(120,0,200,0.4);
-      margin-bottom: 10px;
-      letter-spacing: 0.02em;
-      animation: glow-pulse 3s ease-in-out infinite alternate;
-    }
-
-    @keyframes glow-pulse {
-      from { text-shadow: 0 0 14px var(--p1), 2px 2px 0 rgba(120,0,200,0.35); }
-      to   { text-shadow: 0 0 30px var(--p1), 0 0 60px rgba(191,0,255,0.5), 2px 2px 0 rgba(120,0,200,0.4); }
-    }
-
-    .bio {
-      font-size: 15px;
-      line-height: 1.75;
-      color: var(--dimtext);
-      letter-spacing: 0.03em;
-    }
-    .bio em {
-      font-style: normal;
-      color: var(--p4);
-      text-shadow: 0 0 8px var(--p2);
-    }
-
-    /* divider */
-    .divider {
+    /* card nav dots */
+    .nav-dots {
+      position: fixed;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 150;
       display: flex;
-      align-items: center;
+      flex-direction: column;
       gap: 8px;
-      margin: 20px 0;
-      color: var(--dim);
-      font-size: 12px;
-      letter-spacing: 0.1em;
+      pointer-events: none;
     }
-    .divider::before,
-    .divider::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--p1), transparent);
-      opacity: 0.5;
+    .nav-dot {
+      width: 7px; height: 7px;
+      border: 1px solid var(--p1);
+      box-shadow: 0 0 5px var(--p1);
+      transition: background .15s steps(1), box-shadow .15s steps(1);
     }
-
-    /* links */
-    .links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 22px;
-    }
-
-    .links a {
-      font-family: 'Press Start 2P', monospace;
-      font-size: 8px;
-      text-decoration: none;
-      color: var(--black);
-      background: var(--p2);
-      padding: 9px 14px;
-      letter-spacing: 0.08em;
-      border: 2px solid #6600cc;
-      box-shadow: 3px 3px 0 #6600cc, 0 0 12px rgba(155,48,255,0.4);
-      transition: all 0.08s steps(1);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .links a:hover {
-      background: var(--pink);
-      border-color: #aa00aa;
-      box-shadow: 3px 3px 0 #aa00aa, 0 0 18px rgba(255,77,255,0.5);
-      transform: translate(-1px, -1px);
-    }
-    .links a:active {
-      transform: translate(2px, 2px);
-      box-shadow: 1px 1px 0 #6600cc;
-    }
-
-    .links a.v2 {
-      background: #6600cc;
-      border-color: #3d007a;
-      box-shadow: 3px 3px 0 #3d007a, 0 0 10px rgba(102,0,204,0.4);
-    }
-    .links a.v3 {
-      background: var(--p3);
-      border-color: #8800cc;
-      box-shadow: 3px 3px 0 #8800cc, 0 0 10px rgba(204,102,255,0.35);
-    }
-    .links a.v4 {
-      background: var(--pink);
-      border-color: #aa00aa;
-      box-shadow: 3px 3px 0 #aa00aa, 0 0 10px rgba(255,77,255,0.35);
-    }
-
-    /* status */
-    .statusbar {
-      border-top: 1px solid rgba(191,0,255,0.25);
-      padding-top: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .status-left {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 12px;
-      color: var(--dimtext);
-    }
-
-    .dot {
-      width: 8px; height: 8px;
+    .nav-dot.active {
       background: var(--p1);
-      box-shadow: 0 0 8px var(--p1), 0 0 16px rgba(191,0,255,0.5);
-      animation: blink 1.6s step-end infinite;
+      box-shadow: 0 0 10px var(--p1);
     }
 
-    .status-right {
-      font-size: 11px;
-      color: rgba(191,0,255,0.35);
-      letter-spacing: 0.05em;
+    /* ── Window shell ── */
+    .window {
+      border: 2px solid var(--p1);
+      box-shadow: 0 0 0 1px var(--black), 0 0 18px rgba(191,0,255,0.55), 0 0 55px rgba(191,0,255,0.15), inset 0 0 40px rgba(191,0,255,0.04);
+    }
+    .win-profile { animation:boot .55s steps(1) both; }
+    .win-friends { animation:boot .55s steps(1) .18s both; }
+    .win-art     { animation:boot .55s steps(1) .34s both; }
+    .win-spotify { animation:boot .55s steps(1) .50s both; }
+
+    @keyframes boot {
+      0%{opacity:0;transform:scaleY(0.03)} 30%{opacity:1;transform:scaleY(0.03)} 65%{transform:scaleY(1.01)} 100%{transform:scaleY(1)}
     }
 
-    @media (max-width: 500px) {
-      .window-body { padding: 18px 16px 16px; }
-      .profile { flex-direction: column; align-items: center; text-align: center; }
-      .avatar-box::before, .avatar-box::after { display: none; }
-      h1 { font-size: 50px; }
-      .links { justify-content: center; }
-      .statusbar { justify-content: center; }
+    .titlebar {
+      background: var(--p1); color: var(--black);
+      font-family: 'Press Start 2P', monospace; font-size: 8px;
+      padding: 7px 10px;
+      display: flex; align-items: center; justify-content: space-between;
+      letter-spacing: 0.05em; user-select: none;
+    }
+    .tb-buttons { display:flex; gap:5px; }
+    .tb-buttons span {
+      display:inline-block; width:11px;height:11px;
+      border:2px solid var(--black); background:var(--black);
+      font-size:7px;line-height:8px;text-align:center;
+      color:var(--p1); cursor:pointer;
+    }
+    .window-body { background:var(--surface); padding:20px 22px 18px; }
+
+    .prompt-line { font-size:10px;color:var(--dim);margin-bottom:16px;letter-spacing:.05em; }
+    .cursor {
+      display:inline-block;width:7px;height:12px;background:var(--p1);
+      vertical-align:middle;margin-left:3px;
+      animation:blink 1s step-end infinite;box-shadow:0 0 6px var(--p1);
+    }
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+    .marquee-wrap {
+      overflow:hidden;
+      border-top:1px solid rgba(191,0,255,0.3);border-bottom:1px solid rgba(191,0,255,0.3);
+      background:rgba(191,0,255,0.07);padding:5px 0;margin-bottom:18px;
+    }
+    .marquee {
+      display:flex;white-space:nowrap;animation:march 22s linear infinite;
+      font-family:'VT323',monospace;font-size:16px;color:var(--p3);
+      letter-spacing:.08em;text-shadow:0 0 8px var(--p2);
+    }
+    .marquee span{padding-right:60px;}
+    @keyframes march{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+    .divider {
+      display:flex;align-items:center;gap:8px;margin:16px 0;
+      color:var(--dim);font-size:11px;letter-spacing:.1em;
+    }
+    .divider::before,.divider::after {
+      content:'';flex:1;height:1px;
+      background:linear-gradient(90deg,transparent,var(--p1),transparent);opacity:.5;
+    }
+    .statusbar {
+      border-top:1px solid rgba(191,0,255,0.25);padding-top:12px;
+      display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;
+    }
+    .status-left{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--dimtext);}
+    .dot{width:7px;height:7px;background:var(--p1);box-shadow:0 0 8px var(--p1);animation:blink 1.6s step-end infinite;}
+    .status-right{font-size:10px;color:rgba(191,0,255,0.35);letter-spacing:.05em;}
+
+    /* ── Profile ── */
+    .profile{display:flex;gap:18px;align-items:flex-start;margin-bottom:18px;}
+    .avatar-box{flex-shrink:0;position:relative;}
+    .avatar-frame{
+      border:2px solid var(--p1);box-shadow:0 0 14px var(--p1),inset 0 0 10px rgba(191,0,255,0.15);
+      width:96px;height:96px;overflow:hidden;
+    }
+    .avatar-frame img{width:100%;height:100%;object-fit:cover;image-rendering:pixelated;filter:sepia(.3) saturate(2) hue-rotate(250deg) brightness(.85);display:block;}
+    .avatar-frame .fallback{width:100%;height:100%;display:none;align-items:center;justify-content:center;font-size:42px;background:repeating-linear-gradient(45deg,rgba(191,0,255,.08) 0px,rgba(191,0,255,.08) 2px,transparent 2px,transparent 8px);}
+    .avatar-label{font-family:'VT323',monospace;font-size:12px;color:var(--dim);text-align:center;margin-top:4px;letter-spacing:.1em;}
+    .avatar-box::before,.avatar-box::after{content:'✦';position:absolute;font-size:11px;color:var(--p3);text-shadow:0 0 8px var(--p2);line-height:1;z-index:2;}
+    .avatar-box::before{top:-7px;left:-7px;}
+    .avatar-box::after{top:-7px;right:-7px;}
+    .info{flex:1;}
+    .info-tag{font-family:'Press Start 2P',monospace;font-size:6px;color:var(--p3);letter-spacing:.12em;margin-bottom:8px;text-shadow:0 0 10px var(--p2);}
+    h1{
+      font-family:'VT323',monospace;font-size:clamp(40px,6vw,56px);line-height:1;color:var(--p3);
+      text-shadow:0 0 18px var(--p1),0 0 40px rgba(191,0,255,.5),2px 2px 0 rgba(120,0,200,.4);
+      margin-bottom:8px;animation:glow-pulse 3s ease-in-out infinite alternate;
+    }
+    @keyframes glow-pulse{from{text-shadow:0 0 14px var(--p1),2px 2px 0 rgba(120,0,200,.35)}to{text-shadow:0 0 30px var(--p1),0 0 60px rgba(191,0,255,.5),2px 2px 0 rgba(120,0,200,.4)}}
+    .bio{font-size:13px;line-height:1.75;color:var(--dimtext);letter-spacing:.03em;}
+    .bio em{font-style:normal;color:var(--p4);text-shadow:0 0 8px var(--p2);}
+    .links{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;}
+    .links a{
+      font-family:'Press Start 2P',monospace;font-size:7px;text-decoration:none;
+      color:var(--black);background:var(--p2);padding:8px 12px;letter-spacing:.08em;
+      border:2px solid #6600cc;box-shadow:3px 3px 0 #6600cc,0 0 12px rgba(155,48,255,.4);
+      transition:all .08s steps(1);display:flex;align-items:center;gap:5px;
+    }
+    .links a:hover{background:var(--pink);border-color:#aa00aa;box-shadow:3px 3px 0 #aa00aa,0 0 18px rgba(255,77,255,.5);transform:translate(-1px,-1px);}
+    .links a:active{transform:translate(2px,2px);box-shadow:1px 1px 0 #6600cc;}
+    .links a.v2{background:#6600cc;border-color:#3d007a;box-shadow:3px 3px 0 #3d007a;}
+    .links a.v3{background:var(--p3);border-color:#8800cc;box-shadow:3px 3px 0 #8800cc;}
+
+    /* ── Friends ── */
+    .friends-header-tag{
+      font-family:'Press Start 2P',monospace;font-size:6px;color:var(--p3);
+      letter-spacing:.12em;margin-bottom:14px;text-shadow:0 0 10px var(--p2);
+      display:flex;align-items:center;gap:8px;
+    }
+    .friends-header-tag::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(191,0,255,.4),transparent);}
+    .friends-list{display:flex;flex-direction:column;gap:8px;}
+
+    .friend-card{
+      text-decoration:none;display:flex;align-items:center;gap:12px;
+      padding:10px 12px;border:1px solid rgba(191,0,255,.2);
+      background:rgba(13,1,24,.7);position:relative;overflow:hidden;
+      transition:all .08s steps(1);
+    }
+    .friend-card::before{
+      content:'';position:absolute;inset:0;
+      background:repeating-linear-gradient(to bottom,transparent 0px,transparent 2px,rgba(191,0,255,.03) 2px,rgba(191,0,255,.03) 4px);
+      pointer-events:none;opacity:0;transition:opacity .08s steps(1);
+    }
+    .friend-card:hover{border-color:var(--p1);background:rgba(191,0,255,.08);box-shadow:0 0 0 1px var(--p1),0 0 14px rgba(191,0,255,.3);transform:translateX(3px);}
+    .friend-card:hover::before{opacity:1;}
+    .friend-pfp{
+      width:52px;height:52px;flex-shrink:0;
+      border:2px solid rgba(191,0,255,.4);overflow:hidden;box-shadow:0 0 8px rgba(191,0,255,.25);
+      transition:border-color .08s steps(1),box-shadow .08s steps(1);
+    }
+    .friend-card:hover .friend-pfp{border-color:var(--p1);box-shadow:0 0 12px var(--p1);}
+    .friend-pfp img{width:100%;height:100%;object-fit:cover;image-rendering:pixelated;display:block;}
+    .friend-pfp .fp-fallback{width:100%;height:100%;display:none;align-items:center;justify-content:center;font-size:24px;background:repeating-linear-gradient(45deg,rgba(191,0,255,.06) 0px,rgba(191,0,255,.06) 2px,transparent 2px,transparent 8px);}
+    .friend-meta{flex:1;min-width:0;}
+    .friend-name{font-family:'VT323',monospace;font-size:22px;color:var(--p4);letter-spacing:.04em;line-height:1;display:block;margin-bottom:2px;text-shadow:0 0 6px rgba(191,0,255,.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .friend-card:hover .friend-name{color:#fff;text-shadow:0 0 12px var(--p1);}
+    .friend-tag{font-size:10px;color:rgba(191,0,255,.45);letter-spacing:.06em;}
+    .friend-card:hover .friend-tag{color:var(--p3);}
+    .friend-status{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--dimtext);flex-shrink:0;}
+    .odot{width:6px;height:6px;background:var(--p1);box-shadow:0 0 5px var(--p1);animation:blink 2s step-end infinite;}
+    .odot.offline{background:rgba(191,0,255,.2);box-shadow:none;animation:none;}
+    .friends-footer{border-top:1px solid rgba(191,0,255,.15);margin-top:14px;padding-top:10px;font-size:10px;color:rgba(191,0,255,.3);letter-spacing:.06em;text-align:center;}
+
+    /* ── Art Gallery ── */
+    .art-intro{font-size:13px;line-height:1.7;color:var(--dimtext);margin-bottom:18px;letter-spacing:.03em;}
+    .art-intro em{font-style:normal;color:var(--p4);text-shadow:0 0 8px var(--p2);}
+
+    .art-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(185px,1fr));
+      gap:14px;margin-bottom:18px;
+    }
+
+    .art-card{
+      position:relative;border:2px solid rgba(191,0,255,.25);
+      overflow:hidden;background:#0a0014;cursor:pointer;
+      transition:all .1s steps(1);
+    }
+    .art-card:hover{
+      border-color:var(--p1);
+      box-shadow:0 0 0 1px var(--p1),0 0 22px rgba(191,0,255,.45);
+      transform:translateY(-3px);z-index:2;
+    }
+    .art-img-wrap{width:100%;aspect-ratio:1/1;overflow:hidden;display:block;position:relative;}
+    .art-img-wrap img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.88) saturate(1.2);transition:transform .1s steps(2),filter .1s steps(1);}
+    .art-card:hover .art-img-wrap img{transform:scale(1.05);filter:brightness(1) saturate(1.4);}
+    .art-img-wrap::after{
+      content:'';position:absolute;inset:0;pointer-events:none;
+      background:repeating-linear-gradient(to bottom,transparent 0px,transparent 3px,rgba(191,0,255,.05) 3px,rgba(191,0,255,.05) 4px);
+      opacity:0;transition:opacity .08s steps(1);
+    }
+    .art-card:hover .art-img-wrap::after{opacity:1;}
+    .art-placeholder{
+      width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:52px;
+      background:repeating-linear-gradient(45deg,rgba(191,0,255,.05) 0px,rgba(191,0,255,.05) 2px,transparent 2px,transparent 10px),
+        radial-gradient(circle at 50% 50%,rgba(120,0,200,.18),transparent 70%);
+    }
+    .art-info{padding:9px 11px;border-top:1px solid rgba(191,0,255,.2);background:rgba(13,1,24,.9);}
+    .art-title{font-family:'VT323',monospace;font-size:17px;color:var(--p4);letter-spacing:.05em;display:block;margin-bottom:2px;text-shadow:0 0 6px rgba(191,0,255,.4);}
+    .art-card:hover .art-title{color:#fff;text-shadow:0 0 10px var(--p1);}
+    .art-artist{font-size:10px;color:rgba(191,0,255,.5);letter-spacing:.06em;}
+    .art-card:hover .art-artist{color:var(--p3);}
+
+    /* lightbox */
+    .lightbox{
+      position:fixed;inset:0;z-index:300;background:rgba(8,1,15,.93);
+      display:none;align-items:center;justify-content:center;padding:24px;
+    }
+    .lightbox.open{display:flex;}
+    .lb-inner{
+      max-width:680px;width:100%;
+      border:2px solid var(--p1);
+      box-shadow:0 0 0 1px var(--black),0 0 40px rgba(191,0,255,.5);
+      animation:boot .3s steps(1) both;
+    }
+    .lb-bar{
+      background:var(--p1);color:var(--black);
+      font-family:'Press Start 2P',monospace;font-size:8px;
+      padding:7px 10px;display:flex;align-items:center;justify-content:space-between;
+    }
+    .lb-close{
+      cursor:pointer;font-family:'Press Start 2P',monospace;font-size:8px;
+      background:var(--black);color:var(--p1);border:2px solid var(--black);padding:2px 5px;
+    }
+    .lb-img{width:100%;display:block;max-height:65vh;object-fit:contain;background:#0a0014;}
+    .lb-caption{background:var(--surface);padding:11px 13px;font-size:11px;color:var(--dimtext);letter-spacing:.05em;}
+    .lb-caption strong{color:var(--p4);font-weight:normal;}
+
+    /* ── Ref Sheet ── */
+    .win-ref { animation:boot .55s steps(1) .66s both; }
+
+    .ref-section-label {
+      font-family:'Press Start 2P',monospace; font-size:6px;
+      color:var(--p3); letter-spacing:.12em; margin-bottom:12px;
+      text-shadow:0 0 10px var(--p2);
+      display:flex; align-items:center; gap:8px;
+    }
+    .ref-section-label::after { content:''; flex:1; height:1px; background:linear-gradient(90deg,rgba(191,0,255,.4),transparent); }
+
+    .ref-layout {
+      display:flex; flex-direction:column; gap:18px; margin-bottom:18px;
+    }
+
+    .ref-img-box {
+      width:100%;
+      border:2px solid var(--p1);
+      box-shadow:0 0 14px var(--p1), inset 0 0 10px rgba(191,0,255,0.1);
+      overflow:hidden; position:relative;
+    }
+    .ref-img-box img { width:100%; display:block; filter:brightness(.9) saturate(1.2); }
+    .ref-img-box .ref-img-fallback {
+      width:100%; aspect-ratio:16/7; display:flex; align-items:center; justify-content:center;
+      font-size:80px;
+      background:repeating-linear-gradient(45deg,rgba(191,0,255,.06) 0px,rgba(191,0,255,.06) 2px,transparent 2px,transparent 10px),
+        radial-gradient(circle at 50% 50%,rgba(120,0,200,.2),transparent 70%);
+    }
+    .ref-img-label {
+      font-family:'VT323',monospace; font-size:12px; color:var(--dim);
+      text-align:center; padding:5px 0 4px; letter-spacing:.1em;
+      border-top:1px solid rgba(191,0,255,.25); background:rgba(13,1,24,.8);
+    }
+
+    .ref-info { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+
+    .ref-name-block { grid-column:1/-1; margin-bottom:2px; }
+    .ref-name {
+      font-family:'VT323',monospace; font-size:clamp(36px,6vw,50px); line-height:1;
+      color:var(--p3); text-shadow:0 0 16px var(--p1), 2px 2px 0 rgba(120,0,200,.4);
+      animation:glow-pulse 3s ease-in-out infinite alternate;
+    }
+    .ref-species {
+      font-size:11px; color:var(--dimtext); letter-spacing:.08em; margin-top:3px;
+    }
+    .ref-species em { font-style:normal; color:var(--p4); }
+
+    .ref-block { }
+    .ref-block-title {
+      font-family:'Press Start 2P',monospace; font-size:6px;
+      color:rgba(191,0,255,.5); letter-spacing:.1em; margin-bottom:8px;
+    }
+
+    /* traits */
+    .ref-traits { display:flex; flex-wrap:wrap; gap:6px; }
+    .ref-trait {
+      font-size:11px; color:var(--black);
+      background:var(--p2); padding:4px 9px;
+      border:1px solid #6600cc;
+      box-shadow:2px 2px 0 #6600cc;
+      letter-spacing:.05em;
+    }
+    .ref-trait.alt { background:var(--p3); border-color:#8800cc; box-shadow:2px 2px 0 #8800cc; }
+    .ref-trait.pink { background:var(--pink); border-color:#aa00aa; box-shadow:2px 2px 0 #aa00aa; }
+
+    /* colour swatches */
+    .ref-colours { display:flex; flex-wrap:wrap; gap:8px; }
+    .ref-swatch {
+      display:flex; flex-direction:column; align-items:center; gap:4px;
+    }
+    .swatch-box {
+      width:36px; height:36px;
+      border:2px solid rgba(191,0,255,.4);
+      box-shadow:0 0 8px rgba(191,0,255,.2);
+    }
+    .swatch-label { font-size:9px; color:var(--dimtext); letter-spacing:.04em; text-align:center; }
+    .swatch-hex { font-size:9px; color:rgba(191,0,255,.5); letter-spacing:.03em; }
+
+    /* likes/dislikes */
+    .ref-list { display:flex; flex-direction:column; gap:4px; }
+    .ref-list-item {
+      font-size:12px; color:var(--dimtext); letter-spacing:.04em;
+      display:flex; gap:6px; align-items:baseline;
+    }
+    .ref-list-item .bullet { color:var(--p3); flex-shrink:0; }
+    .ref-list-item.bad .bullet { color:var(--pink); }
+
+    @media(max-width:520px){
+      .ref-info { grid-template-columns:1fr; }
+    }
+
+    /* ── Spotify ── */
+    .spotify-label {
+      font-family:'Press Start 2P',monospace; font-size:6px;
+      color:var(--p3); letter-spacing:.12em; margin-bottom:14px;
+      text-shadow:0 0 10px var(--p2);
+      display:flex; align-items:center; gap:8px;
+    }
+    .spotify-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(191,0,255,.4),transparent);}
+    .spotify-wrap {
+      border:1px solid rgba(191,0,255,.25);
+      box-shadow:0 0 16px rgba(191,0,255,.15),inset 0 0 20px rgba(191,0,255,.04);
+      overflow:hidden;
+    }
+    .spotify-wrap iframe { display:block; }
+
+    /* ── DNI card ── */
+    .win-dni { animation:boot .55s steps(1) .82s both; }
+
+    .dni-label {
+      font-family:'Press Start 2P',monospace; font-size:6px;
+      color:var(--p3); letter-spacing:.12em; margin-bottom:14px;
+      text-shadow:0 0 10px var(--p2);
+      display:flex; align-items:center; gap:8px;
+    }
+    .dni-label::after { content:''; flex:1; height:1px; background:linear-gradient(90deg,rgba(191,0,255,.4),transparent); }
+
+    .dni-cols { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:18px; }
+
+    .dni-section-title {
+      font-family:'Press Start 2P',monospace; font-size:6px;
+      letter-spacing:.1em; margin-bottom:10px; padding:5px 8px;
+      border-left:3px solid;
+    }
+    .dni-section-title.do-not { color:#ff6666; border-color:#ff4444; background:rgba(255,50,50,.07); }
+    .dni-section-title.ok-interact { color:#66ffaa; border-color:#33ff88; background:rgba(50,255,120,.07); }
+
+    .dni-list { display:flex; flex-direction:column; gap:6px; }
+    .dni-item {
+      font-size:11px; color:var(--dimtext); letter-spacing:.03em;
+      display:flex; gap:7px; align-items:baseline; line-height:1.5;
+    }
+    .dni-item .dbullet { flex-shrink:0; }
+    .dni-item .dbullet.x { color:#ff4444; text-shadow:0 0 6px #ff4444; }
+    .dni-item .dbullet.ok { color:#33ff88; text-shadow:0 0 6px #33ff88; }
+
+    .dni-note {
+      font-size:10px; color:rgba(191,0,255,.4); letter-spacing:.05em;
+      border-top:1px solid rgba(191,0,255,.15); padding-top:10px;
+      text-align:center; line-height:1.6;
+    }
+
+    /* ── Mobile fixes ── */
+    @media(max-width:700px){
+      .snap-slide { padding: 10px 8px; }
+      .snap-slide > .window { max-height: calc(100vh - 20px); }
+
+      .nav-dots { right: 6px; }
+      .nav-dot { width: 5px; height: 5px; }
+
+      .window-body { padding: 14px 14px 14px; }
+
+      .profile { gap: 12px; }
+      .avatar-frame { width: 72px; height: 72px; }
+      h1 { font-size: clamp(32px, 8vw, 48px); }
+      .bio { font-size: 12px; }
+
+      .links a { font-size: 6px; padding: 7px 9px; }
+
+      .art-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; }
+
+      .friend-pfp { width: 42px; height: 42px; }
+      .friend-name { font-size: 18px; }
+      .friend-tag { font-size: 9px; }
+      .friend-status { font-size: 9px; }
+
+      .ref-info { grid-template-columns: 1fr; }
+      .dni-cols { grid-template-columns: 1fr; gap: 12px; }
+
+      .titlebar { font-size: 6px; padding: 6px 8px; }
+      .tb-buttons span { width: 9px; height: 9px; font-size: 6px; }
+
+      .prompt-line { font-size: 9px; }
+      .marquee { font-size: 13px; }
+    }
+
+    @media(max-width:400px){
+      .links { gap: 6px; }
+      .links a { font-size: 5px; padding: 6px 7px; }
+      .avatar-frame { width: 60px; height: 60px; }
     }
   </style>
 </head>
 <body>
-  <div class="bg-grid"></div>
-  <div class="blob blob-1"></div>
-  <div class="blob blob-2"></div>
 
-  <div class="crt">
-    <div class="window">
-      <div class="titlebar">
-        <span>romiee.exe — profile.html</span>
-        <div class="tb-buttons">
-          <span>_</span><span>□</span><span>×</span>
+<div class="crt-overlay"></div>
+<div class="crt-vignette"></div>
+<div class="bg-grid"></div>
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
+
+<!-- nav dots -->
+<div class="nav-dots" id="navDots">
+  <div class="nav-dot active" data-index="0"></div>
+  <div class="nav-dot" data-index="1"></div>
+  <div class="nav-dot" data-index="2"></div>
+  <div class="nav-dot" data-index="3"></div>
+  <div class="nav-dot" data-index="4"></div>
+  <div class="nav-dot" data-index="5"></div>
+</div>
+
+<!-- scroll hint -->
+<div class="scroll-hint">
+  <div class="scroll-hint-text">SCROLL</div>
+  <div class="scroll-hint-arrow"></div>
+</div>
+
+<div class="desktop" id="desktop">
+
+  <!-- ══════════════════════════════
+       WINDOW 1 — PROFILE
+  ══════════════════════════════ -->
+  <div class="snap-slide">
+  <div class="window win-profile">
+    <div class="titlebar">
+      <span>romiee.exe — profile.html</span>
+      <div class="tb-buttons"><span>_</span><span>□</span><span>×</span></div>
+    </div>
+    <div class="window-body">
+
+      <div class="prompt-line">C:\USERS\ROMIEE&gt; LOAD profile.exe... OK <span class="cursor"></span></div>
+
+      <div class="marquee-wrap">
+        <div class="marquee">
+          <span>✦ welcome to my page !! ✦ silly puppyyy :3 ✦ woof woof ✦ maker of things ✦</span>
+          <span>✦ welcome to my page !! ✦ silly puppyyy :3 ✦ woof woof ✦ maker of things ✦</span>
         </div>
       </div>
 
-      <div class="window-body">
-        <div class="prompt-line">
-          C:\USERS\ROMIEE&gt; LOAD profile.exe... OK
-          <span class="cursor"></span>
-        </div>
-
-        <div class="marquee-wrap">
-          <div class="marquee">
-            <span>✦ welcome to my page !! ✦ maker of things i think ✦ silly puppyyy :3 ✦ woof woof ✦</span>
-            <span>✦ welcome to my page !! ✦ maker of things i think ✦ silly puppyyy :3 ✦ woof woof ✦</span>
+      <div class="profile">
+        <div class="avatar-box">
+          <div class="avatar-frame">
+            <img src="art.webp" alt="Romiee"
+              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="fallback">🐾</div>
           </div>
+          <div class="avatar-label">[ user.img ]</div>
         </div>
-
-        <div class="profile">
-          <div class="avatar-box">
-            <div class="avatar-frame">
-              <img src="art.webp" alt="Romiee"
-                onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-              <div class="fallback">🐾</div>
-            </div>
-            <div class="avatar-label">[ user.img ]</div>
-          </div>
-
-          <div class="info">
-            <div class="info-tag">&gt;&gt; USER PROFILE &lt;&lt;</div>
-            <h1>Romiee 🐾</h1>
-            <p class="bio">
-              hey!! i'm romiee. i make <em>things maybe</em>,
-              play <em>games</em>, and exist as a
-              silly puppyyy :3<br>glad u found this page !!
-              I luv my boyfrien i <3 colbyyy :3
-            </p>
-          </div>
-        </div>
-
-        <div class="divider">// LINKS //</div>
-
-        <div class="links">
-          <a href="https://x.com/sillyromiee" class="v3"><span>🐦</span> TWITTER</a>
-          <a href="https://www.youtube.com/@sillyromiee"><span>💜</span> YOUTUBE</a>
-          <a href="https://www.roblox.com/users/136959169/profile" class="v2"><span>🎮</span> ROBLOX</a>
-        </div>
-
-        <div class="statusbar">
-          <div class="status-left">
-            <div class="dot"></div>
-            wruff arf arf — probably being gay asf
-          </div>
-          <div class="status-right">SYS:OK // MEM:67% // VER:2.0</div>
+        <div class="info">
+          <div class="info-tag">&gt;&gt; USER PROFILE &lt;&lt;</div>
+          <h1>Romiee 🐾</h1>
+          <p class="bio">
+            hey!! i'm romiee. i make <em>things maybe</em>,
+            play <em>games</em>, and exist as a silly puppyyy :3<br>
+            glad u found this page !!
+            I luv my boyfrien i &lt;3 colbyyy :3
+          </p>
         </div>
       </div>
+
+      <div class="divider">// LINKS //</div>
+
+      <div class="links">
+        <a href="https://x.com/sillyromiee" class="v3"><span>🐦</span> TWITTER</a>
+        <a href="https://www.youtube.com/@sillyromiee"><span>💜</span> YOUTUBE</a>
+        <a href="https://www.roblox.com/users/136959169/profile" class="v2"><span>🎮</span> ROBLOX</a>
+      </div>
+
+      <div class="statusbar">
+        <div class="status-left"><div class="dot"></div> wruff arf arf — probably being gay asf</div>
+        <div class="status-right">SYS:OK // VER:2.0</div>
+      </div>
+
     </div>
   </div>
+  </div><!-- /snap-slide 1 -->
+
+  <!-- ══════════════════════════════
+       WINDOW 2 — FRIENDS
+  ══════════════════════════════ -->
+  <div class="snap-slide">
+  <div class="window win-friends">
+    <div class="titlebar">
+      <span>frens.exe — friends_list.html</span>
+      <div class="tb-buttons"><span>_</span><span>□</span><span>×</span></div>
+    </div>
+    <div class="window-body">
+
+      <div class="prompt-line">C:\USERS\ROMIEE&gt; LOAD frens.exe... OK <span class="cursor"></span></div>
+
+      <div class="friends-header-tag">&gt;&gt; FREN LIST &lt;&lt;</div>
+
+      <div class="friends-list">
+
+	    
+
+        <a class="friend-card" href="https://walmart.com" target="_blank" rel="noopener">
+          <div class="friend-pfp">
+            <img src="colby.png" alt=""
+              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="fp-fallback">🌙</div>
+          </div>
+          <div class="friend-meta">
+            <span class="friend-name">Colby 💜</span>
+            <div class="friend-tag">[ my boyfrien :3c ]</div>
+          </div>
+          <div class="friend-status"><span class="odot"></span> being a faggot!</div>
+        </a>
+
+        <a class="friend-card" href="https://jaqlito.straw.page/" target="_blank" rel="noopener">
+          <div class="friend-pfp">
+            <img src="francis.png" alt=""
+              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="fp-fallback">🌸</div>
+          </div>
+          <div class="friend-meta">
+            <span class="friend-name">Francis</span>
+            <div class="friend-tag">[ artist friend!! ]</div>
+          </div>
+          <div class="friend-status"><span class="odot"></span> existing maybe</div>
+        </a>
+
+        <a class="friend-card" href="https://lukewolfz.straw.page/" target="_blank" rel="noopener">
+          <div class="friend-pfp">
+            <img src="luke.png" alt=""
+              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="fp-fallback">👾</div>
+          </div>
+          <div class="friend-meta">
+            <span class="friend-name">Luke</span>
+            <div class="friend-tag">[ coolest tidepod dog ever... ]</div>
+          </div>
+          <div class="friend-status"><span class="odot"></span> barking at a wall currently... </div>
+        </a>
+
+        <a class="friend-card" href="https://sillywicker.straw.page" target="_blank" rel="noopener">
+          <div class="friend-pfp">
+            <img src="wicker.png" alt=""
+              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="fp-fallback">⭐</div>
+          </div>
+          <div class="friend-meta">
+            <span class="friend-name">Wicker</span>
+            <div class="friend-tag">[ evil british person... ]</div>
+          </div>
+          <div class="friend-status"><span class="odot"></span> looking at pigeons...</div>
+        </a>
+	        <a class="friend-card" href="https://example.com" target="_blank" rel="noopener">
+          <div class="friend-pfp">
+            <img src="yikes.png" alt=""
+              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="fp-fallback">⭐</div>
+          </div>
+          <div class="friend-meta">
+            <span class="friend-name">Yikes</span>
+            <div class="friend-tag">[ silly austrian person... ]</div>
+          </div>
+          <div class="friend-status"><span class="odot"></span> using linux mint...</div>
+        </a>
+	        <a class="friend-card" href="https://sodolicioussin.straw.page" target="_blank" rel="noopener">
+          <div class="friend-pfp">
+            <img src="cinn.png" alt=""
+              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="fp-fallback">⭐</div>
+          </div>
+          <div class="friend-meta">
+            <span class="friend-name">Dani/Cinn</span>
+            <div class="friend-tag">[ smelly person... ]</div>
+          </div>
+          <div class="friend-status"><span class="odot"></span> being gay....</div>
+        </a>
+
+
+
+	
+
+        
+
+      </div>
+
+      <div class="friends-footer">// frens :3 awrufffff //</div>
+
+    </div>
+  </div>
+  </div><!-- /snap-slide 2 -->
+
+  <!-- ══════════════════════════════
+       WINDOW 3 — ART GALLERY
+  ══════════════════════════════ -->
+  <div class="snap-slide">
+  <div class="window win-art">
+    <div class="titlebar">
+      <span>gallery.exe — fursona_art.html</span>
+      <div class="tb-buttons"><span>_</span><span>□</span><span>×</span></div>
+    </div>
+    <div class="window-body">
+
+      <div class="prompt-line">C:\USERS\ROMIEE&gt; LOAD gallery.exe... OK <span class="cursor"></span></div>
+
+      <p class="art-intro">
+        art of my fursona made by <em>amazing artists</em> !! 🐾
+        click any piece to view it bigger ✦
+      </p>
+
+      <div class="art-grid">
+
+        <!-- ↓ EDIT ART HERE ↓
+             In each .art-card:
+               1. Set onclick → first '' = full image URL, second '' = artist twitter/site URL
+               2. Set <img src=""> to your image URL
+               3. Update the title and "art by:" artist name
+        -->
+
+        <div class="art-card" onclick="openLightbox('romieefloat.png','Floating Romiee','Francis','')">
+          <div class="art-img-wrap">
+            <img src="" alt="fursona art" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+	    <div class="art-placeholder"><img src="romieefloat2.png"></div>
+          </div>
+          <div class="art-info">
+            <span class="art-title">Floating Romiee</span>
+            <div class="art-artist">art by: Francis</div>
+          </div>
+        </div>
+
+        <div class="art-card" onclick="openLightbox('teef.png','Teef','Francis','')">
+          <div class="art-img-wrap">
+            <img src="teef.png" alt="fursona art" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="art-placeholder">🌙</div>
+          </div>
+          <div class="art-info">
+            <span class="art-title">Teef</span>
+            <div class="art-artist">art by: Francis</div>
+          </div>
+        </div>
+
+        <div class="art-card" onclick="openLightbox('think.png','Thinking','Francis','')">
+          <div class="art-img-wrap">
+            <img src="think.png" alt="fursona art" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="art-placeholder">✨</div>
+          </div>
+          <div class="art-info">
+            <span class="art-title">Thinking</span>
+            <div class="art-artist">art by: Francis</div>
+          </div>
+        </div>
+
+        <div class="art-card" onclick="openLightbox('stare.png','Stare..','Cinn','')">
+          <div class="art-img-wrap">
+            <img src="stare.png" alt="fursona art" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="art-placeholder">💜</div>
+          </div>
+          <div class="art-info">
+            <span class="art-title">Stare...</span>
+            <div class="art-artist">art by: Cinn</div>
+          </div>
+        </div>
+
+        <div class="art-card" onclick="openLightbox('derpyart.png','Floofy grape','Derpy','')">
+          <div class="art-img-wrap">
+            <img src="derpyart.png" alt="fursona art" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="art-placeholder">🌸</div>
+          </div>
+          <div class="art-info">
+            <span class="art-title">Floofy grape</span>
+            <div class="art-artist">art by: Derpy</div>
+          </div>
+        </div>
+
+        <div class="art-card" onclick="openLightbox('','Nothing here','no one yet','')">
+          <div class="art-img-wrap">
+            <img src="" alt="fursona art" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="art-placeholder">X</div>
+          </div>
+          <div class="art-info">
+            <span class="art-title">No art here yet...</span>
+            <div class="art-artist">art by: no one</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="statusbar">
+        <div class="status-left"><div class="dot"></div> 5 pieces displayed // all art belongs to respective artists !!</div>
+        <div class="status-right">GALLERY:OK // VER:1.0</div>
+      </div>
+
+    </div>
+  </div>
+  </div><!-- /snap-slide 3 -->
+
+  <!-- ══════════════════════════════
+       WINDOW 4 — REF SHEET
+  ══════════════════════════════ -->
+  <div class="snap-slide">
+  <div class="window win-ref">
+    <div class="titlebar">
+      <span>ref.exe — fursona_ref.html</span>
+      <div class="tb-buttons"><span>_</span><span>□</span><span>×</span></div>
+    </div>
+    <div class="window-body">
+
+      <div class="prompt-line">C:\USERS\ROMIEE&gt; LOAD ref.exe... OK <span class="cursor"></span></div>
+
+      <div class="ref-section-label">&gt;&gt; FURSONA REF &lt;&lt;</div>
+
+      <div class="ref-layout">
+
+        <div class="ref-img-box">
+          <img src="ref.png" alt="Romiee ref sheet"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="ref-img-label">[ ref.png ]</div>
+        </div>
+
+        <div class="ref-info">
+
+          <div class="ref-name-block">
+            <div class="ref-name">Romiee 🐾</div>
+            <div class="ref-species">species: <em>wolf</em> // He/Him</div>
+          </div>
+
+          <!-- COLOURS -->
+          <div class="ref-block">
+            <div class="ref-block-title">// MAIN COLOURS //</div>
+            <div class="ref-colours">
+              <div class="ref-swatch">
+                <div class="swatch-box" style="background:#5e23b9"></div>
+                <div class="swatch-label">main</div>
+                <div class="swatch-hex">#5e23b9</div>
+              </div>
+              <div class="ref-swatch">
+                <div class="swatch-box" style="background:#2d1551;border-color:rgba(191,0,255,.6)"></div>
+                <div class="swatch-label">dark</div>
+                <div class="swatch-hex">#2d1551</div>
+              </div>
+              <div class="ref-swatch">
+                <div class="swatch-box" style="background:#955cec;"></div>
+                <div class="swatch-label">light</div>
+                <div class="swatch-hex">#955cec</div>
+              </div>
+              <div class="ref-swatch">
+                <div class="swatch-box" style="background:#7439cf;"></div>
+                <div class="swatch-label">mid light</div>
+                <div class="swatch-hex">#7439cf</div>
+              </div>
+                         </div>
+          </div>
+
+          <!-- TRAITS -->
+          <div class="ref-block">
+            <div class="ref-block-title">// TRAITS //</div>
+            <div class="ref-traits">
+              <span class="ref-trait">silly :3</span>
+              <span class="ref-trait alt">chaotic</span>
+              <span class="ref-trait">soft</span>
+              <span class="ref-trait alt">playful</span>
+              <span class="ref-trait">gay as frickk</span>
+            </div>
+          </div>
+
+          <!-- LIKES / DISLIKES -->
+          <div class="ref-block">
+            <div class="ref-block-title">// LIKES //</div>
+            <div class="ref-list">
+              <div class="ref-list-item"><span class="bullet">✦</span> games & roblox</div>
+              <div class="ref-list-item"><span class="bullet">✦</span> music & vibing</div>
+              <div class="ref-list-item"><span class="bullet">✦</span> my boyfrien colby 💜</div>
+              <div class="ref-list-item"><span class="bullet">✦</span> being a silly puppyy :3</div>
+            </div>
+          </div>
+
+          <div class="ref-block">
+            <div class="ref-block-title">// DISLIKES //</div>
+            <div class="ref-list">
+              <div class="ref-list-item bad"><span class="bullet">✗</span> mean people</div>
+              <div class="ref-list-item bad"><span class="bullet">✗</span> early mornings</div>
+              <div class="ref-list-item bad"><span class="bullet">✗</span> being bored</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+  </div><!-- /snap-slide 4 -->
+
+  <!-- ══════════════════════════════
+       WINDOW 5 — SPOTIFY
+  ══════════════════════════════ -->
+  <div class="snap-slide">
+  <div class="window win-spotify">
+    <div class="titlebar">
+      <span>music.exe — fav_artist.html</span>
+      <div class="tb-buttons"><span>_</span><span>□</span><span>×</span></div>
+    </div>
+    <div class="window-body">
+
+      <div class="prompt-line">C:\USERS\ROMIEE&gt; LOAD music.exe... OK <span class="cursor"></span></div>
+
+      <div class="spotify-label">&gt;&gt; FAV ARTIST &lt;&lt;</div>
+
+      <div class="spotify-wrap">
+        <iframe data-testid="embed-iframe" style="border-radius:0" src="https://open.spotify.com/embed/artist/1vjVjrMopGFYfuvczWXXM4?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+      </div>
+
+    </div>
+  </div>
+  </div><!-- /snap-slide 5 -->
+
+  <!-- ══════════════════════════════
+       WINDOW 6 — DNI / INTERACT
+  ══════════════════════════════ -->
+  <div class="snap-slide">
+  <div class="window win-dni">
+    <div class="titlebar">
+      <span>rules.exe — dni.html</span>
+      <div class="tb-buttons"><span>_</span><span>□</span><span>×</span></div>
+    </div>
+    <div class="window-body">
+
+      <div class="prompt-line">C:\USERS\ROMIEE&gt; LOAD dni.exe... OK <span class="cursor"></span></div>
+
+      <div class="dni-label">&gt;&gt; DNI / INTERACT &lt;&lt;</div>
+
+      <div class="dni-cols">
+
+        <div class="dni-do-not">
+          <div class="dni-section-title do-not">// DO NOT INTERACT //</div>
+          <div class="dni-list">
+            <div class="dni-item"><span class="dbullet x">✗</span> homophobes / transphobes</div>
+            <div class="dni-item"><span class="dbullet x">✗</span> racists / bigots of any kind</div>
+            <div class="dni-item"><span class="dbullet x">✗</span> under 13</div>
+            <div class="dni-item"><span class="dbullet x">✗</span> pro-ship</div>
+            <div class="dni-item"><span class="dbullet x">✗</span> basic dni criteria</div>
+            <div class="dni-item"><span class="dbullet x">✗</span> drama starters / shit stirrers</div>
+            <div class="dni-item"><span class="dbullet x">✗</span> nsfw accounts</div>
+          </div>
+        </div>
+
+        <div class="dni-ok">
+          <div class="dni-section-title ok-interact">// OK TO INTERACT //</div>
+          <div class="dni-list">
+            <div class="dni-item"><span class="dbullet ok">✦</span> furries & furry adjacent</div>
+            <div class="dni-item"><span class="dbullet ok">✦</span> lgbtq+ folks !! &lt;3</div>
+            <div class="dni-item"><span class="dbullet ok">✦</span> Anyone that plays RDR2/RDR1</div>
+            <div class="dni-item"><span class="dbullet ok">✦</span> if you eat food </div>
+            <div class="dni-item"><span class="dbullet ok">✦</span> mutuals always welcome !!</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="dni-note">
+        !! if u meet the dni criteria pls don't interact with me or my friends !!<br>
+        otherwise hi !! glad ur here :3 🐾
+      </div>
+
+    </div>
+  </div>
+  </div><!-- /snap-slide 6 -->
+
+</div><!-- /desktop -->
+
+<!-- ══ LIGHTBOX ══ -->
+<div class="lightbox" id="lightbox" onclick="closeLightboxBg(event)">
+  <div class="lb-inner">
+    <div class="lb-bar">
+      <span id="lb-title">piece.png</span>
+      <button class="lb-close" onclick="closeLightbox()">[ × CLOSE ]</button>
+    </div>
+    <img class="lb-img" id="lb-img" src="" alt="">
+    <div class="lb-caption">
+      <strong id="lb-artist"></strong>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Nav dots scroll tracking
+  const desktop = document.getElementById('desktop');
+  const dots = document.querySelectorAll('.nav-dot');
+  const slides = document.querySelectorAll('.snap-slide');
+
+  desktop.addEventListener('scroll', () => {
+    const scrollTop = desktop.scrollTop;
+    const viewH = desktop.clientHeight;
+    const idx = Math.round(scrollTop / viewH);
+    dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+  }, { passive: true });
+
+  function openLightbox(src, title, artist, link) {
+    document.getElementById('lb-img').src = src || '';
+    document.getElementById('lb-title').textContent = title + '.png';
+    document.getElementById('lb-artist').textContent =
+      'art by: ' + artist + (link ? ' — ' + link : '');
+    document.getElementById('lightbox').classList.add('open');
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+  }
+  function closeLightboxBg(e) {
+    if (e.target === document.getElementById('lightbox')) closeLightbox();
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+</script>
+
 </body>
 </html>
