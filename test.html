@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Romiee's Website</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&family=Fuzzy+Bubbles:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:   #241733;
+    --panel:     #2f2140;
+    --panel-alt: #3a2a52;
+    --panel-in:  #26192f;
+    --cream:     #F3E9D8;
+    --cream-dim: rgba(243,233,216,0.68);
+    --gold:      #F0C572;
+    --rose:      #E3A6C7;
+    --line:      rgba(243,233,216,0.28);
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0;}
+
+  html,body{height:100%;overflow:hidden;background:var(--bg-deep);color:var(--cream);font-family:'Fuzzy Bubbles',cursive;}
+
+  body{
+    display:flex;align-items:center;justify-content:center;
+    padding:1.5rem;position:relative;
+  }
+
+  /* cozy backdrop: soft gradient wash + drifting sparkles */
+  .backdrop{position:fixed;inset:0;z-index:0;overflow:hidden;
+    background:
+      radial-gradient(70% 55% at 20% 15%, rgba(224,166,199,0.16), transparent 65%),
+      radial-gradient(60% 50% at 85% 80%, rgba(107,63,200,0.22), transparent 65%),
+      linear-gradient(160deg, #2a1c3c 0%, #1c1128 100%);
+  }
+  .spark{position:absolute;border-radius:50%;background:var(--gold);opacity:0;
+    animation:drift 7s ease-in-out infinite;
+  }
+  @keyframes drift{
+    0%{opacity:0;transform:translateY(0) scale(0.6);}
+    15%{opacity:.9;}
+    85%{opacity:.5;}
+    100%{opacity:0;transform:translateY(-70px) translateX(12px) scale(1.1);}
+  }
+  .doodle{position:absolute;opacity:0;font-size:1.1rem;animation:doodledrift 9s ease-in-out infinite;filter:drop-shadow(0 0 6px rgba(0,0,0,.3));}
+  @keyframes doodledrift{
+    0%{opacity:0;transform:translateY(0) rotate(0deg) scale(.8);}
+    12%{opacity:.55;}
+    88%{opacity:.35;}
+    100%{opacity:0;transform:translateY(-90px) rotate(25deg) scale(1.05);}
+  }
+
+  /* ── the card ── */
+  .card{
+    position:relative;z-index:5;
+    width:100%;max-width:700px;
+    height:min(92vh,720px);
+    display:flex;flex-direction:column;
+    background:
+      radial-gradient(circle at 8px 8px, rgba(243,233,216,0.05) 1.4px, transparent 1.6px) 0 0/22px 22px,
+      var(--panel);
+    border-radius:1.75rem;
+    border:2px dashed var(--line);
+    box-shadow:0 1.5em 3em -0.5em rgba(0,0,0,0.55), 0 0 0 6px rgba(0,0,0,0.15) inset;
+    padding:1.6rem 1.9rem 1.3rem;
+    overflow:hidden;
+    animation:pop .5s cubic-bezier(.2,1,.3,1) both;
+  }
+  @keyframes pop{from{opacity:0;transform:translateY(10px) scale(.98);}to{opacity:1;transform:none;}}
+
+  .tape{
+    position:absolute;width:64px;height:26px;background:rgba(240,197,114,0.85);
+    box-shadow:0 3px 6px rgba(0,0,0,.25);z-index:20;
+    -webkit-mask-image:repeating-linear-gradient(115deg,#000 0 6px,transparent 6px 8px);
+            mask-image:repeating-linear-gradient(115deg,#000 0 6px,transparent 6px 8px);
+  }
+  .tape.tl{top:-10px;left:22px;transform:rotate(-8deg);}
+  .tape.tr{top:-10px;right:22px;transform:rotate(7deg);background:rgba(227,166,199,0.85);}
+  .corner-star{position:absolute;font-size:1.1rem;color:var(--gold);opacity:.55;z-index:2;}
+  .corner-star.cs1{bottom:14px;left:16px;transform:rotate(-12deg);}
+  .corner-star.cs2{top:14px;right:18px;transform:rotate(10deg);}
+
+  /* header: avatar + name + tagline */
+  .head{display:flex;align-items:center;gap:1.1rem;flex-shrink:0;margin-bottom:1rem;position:relative;}
+  .avatar-wrap{position:relative;flex-shrink:0;}
+  .avatar{
+    width:84px;height:84px;border-radius:50%;overflow:hidden;
+    border:3px solid var(--gold);box-shadow:0 0 0 4px var(--panel), 0 0 0 6px var(--line), 0 5px 16px rgba(0,0,0,.4);
+  }
+  .avatar img{width:100%;height:100%;object-fit:cover;display:block;}
+  .avatar .fb{width:100%;height:100%;display:none;align-items:center;justify-content:center;font-size:36px;background:var(--panel-alt);}
+  .avatar-wrap .deco{position:absolute;font-size:1rem;color:var(--rose);}
+  .avatar-wrap .deco.d1{top:-6px;right:-8px;transform:rotate(12deg);}
+  .avatar-wrap .deco.d2{bottom:-4px;left:-10px;transform:rotate(-15deg);color:var(--gold);}
+  .headtext{min-width:0;}
+  h1{
+    font-family:'Amatic SC',cursive;font-weight:700;font-size:clamp(2.8rem,8vw,3.6rem);
+    line-height:.85;color:var(--gold);letter-spacing:.02em;
+    text-shadow:0.06em 0 0.15em rgba(0,0,0,.25);
+  }
+  .tagline{font-size:.85rem;color:var(--cream-dim);margin-top:.3rem;}
+  .stat-row{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.55rem;}
+  .stat-chip{
+    font-size:.66rem;color:var(--cream);background:rgba(0,0,0,.22);
+    border:1px solid var(--line);border-radius:1rem;padding:.22rem .6rem;
+    display:inline-flex;align-items:center;gap:.3rem;
+  }
+  .stat-chip b{color:var(--gold);font-weight:400;}
+
+  /* nav pills */
+  .nav{display:flex;flex-wrap:wrap;gap:.4rem;flex-shrink:0;margin-bottom:1rem;}
+  .navbtn{
+    all:unset;cursor:pointer;
+    font-family:'Fuzzy Bubbles',cursive;font-size:.8rem;letter-spacing:.02em;
+    color:var(--cream);border:1px solid var(--line);border-radius:.7rem;
+    padding:.5rem .95rem;transition:border-color .2s ease,color .2s ease,background .2s ease,transform .15s ease;
+  }
+  .navbtn:hover{transform:translateY(-1px);}
+  .navbtn:hover{border-color:var(--gold);color:var(--gold);}
+  .navbtn.active{background:var(--gold);color:#3a2410;border-color:var(--gold);font-weight:700;}
+
+  /* dashed divider */
+  .divider{border-top:2px dashed var(--line);margin-bottom:1rem;flex-shrink:0;}
+
+  /* content stage — no scroll, one panel visible at a time */
+  .stage{position:relative;flex:1;min-height:0;}
+  .panel{
+    position:absolute;inset:0;display:none;overflow-y:auto;
+    animation:fadein .25s ease both;
+    scrollbar-width:thin;scrollbar-color:var(--gold) transparent;
+  }
+  .panel::-webkit-scrollbar{width:5px;}
+  .panel::-webkit-scrollbar-thumb{background:var(--gold);border-radius:6px;}
+  .panel.active{display:block;}
+  .panel[data-panel="music"].active{display:flex;flex-direction:column;}
+  @keyframes fadein{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+
+  .lead{font-size:.85rem;line-height:1.6;color:var(--cream-dim);margin-bottom:.9rem;}
+  .lead em{font-style:normal;color:var(--gold);}
+  .sec-title{
+    font-family:'Amatic SC',cursive;font-size:1.7rem;color:var(--gold);
+    line-height:1;margin-bottom:.4rem;display:flex;align-items:center;gap:.4rem;
+  }
+  .sec-title::after{content:'';flex:1;height:1px;background:repeating-linear-gradient(90deg,var(--line) 0 6px,transparent 6px 10px);}
+
+  /* links (profile) */
+  .icon-row{display:flex;gap:.6rem;margin-bottom:1rem;}
+  .icon-row a{
+    all:unset;cursor:pointer;
+    width:2.6rem;height:2.6rem;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    background:rgba(0,0,0,.22);color:var(--gold);font-size:1rem;
+    transition:background .2s ease,transform .15s ease;
+  }
+  .icon-row a:hover{background:var(--gold);color:#3a2410;transform:translateY(-2px);}
+
+  .statuspill{
+    display:inline-flex;align-items:center;gap:.4rem;
+    font-size:.72rem;color:var(--cream-dim);
+    border:1px solid var(--line);border-radius:2rem;padding:.35rem .8rem;
+  }
+  .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:blink 1.6s step-end infinite;}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+
+  .fav-grid{display:grid;grid-template-columns:1fr 1fr;gap:.55rem;margin-top:.5rem;}
+  .fav-item{
+    display:flex;align-items:flex-start;gap:.5rem;
+    background:var(--panel-alt);border-radius:.8rem;padding:.55rem .65rem;
+  }
+  .fav-emoji{font-size:1.1rem;line-height:1;flex-shrink:0;}
+  .fav-item div{display:flex;flex-direction:column;gap:.1rem;min-width:0;}
+  .fav-item b{font-size:.7rem;color:var(--gold);font-weight:400;}
+  .fav-item span{font-size:.66rem;color:var(--cream-dim);line-height:1.35;}
+
+  .note{
+    position:relative;margin-top:1rem;background:rgba(240,197,114,0.1);
+    border:1px dashed var(--gold);border-radius:.7rem;
+    padding:.7rem .8rem .7rem 1.6rem;
+  }
+  .note p{font-size:.72rem;color:var(--cream-dim);line-height:1.5;}
+  .note p b{color:var(--gold);font-weight:400;}
+  .note-pin{position:absolute;top:-10px;left:10px;font-size:1rem;transform:rotate(-8deg);}
+
+  /* friends */
+  .frens{display:flex;flex-direction:column;gap:.5rem;}
+  .fren{
+    text-decoration:none;display:flex;align-items:center;gap:.7rem;
+    background:var(--panel-alt);border-radius:.8rem;padding:.5rem .7rem;
+    transition:background .15s ease,transform .15s ease;
+  }
+  .fren:hover{background:#443062;transform:translateX(3px);}
+  .fren-pfp{width:2.4rem;height:2.4rem;border-radius:50%;overflow:hidden;flex-shrink:0;border:2px solid var(--line);}
+  .fren-pfp img{width:100%;height:100%;object-fit:cover;display:block;}
+  .fren-pfp .fb{width:100%;height:100%;display:none;align-items:center;justify-content:center;font-size:16px;background:var(--panel-in);}
+  .fren-meta{flex:1;min-width:0;}
+  .fren-name{color:var(--gold);font-size:1rem;display:block;}
+  .fren-tag{font-size:.72rem;color:var(--cream-dim);}
+  .fren-note{font-size:.68rem;color:var(--cream-dim);flex-shrink:0;}
+
+  /* art */
+  .art-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.7rem;}
+  .art-card{border-radius:1rem;overflow:hidden;background:var(--panel-alt);cursor:pointer;transition:transform .15s ease;}
+  .art-card:hover{transform:translateY(-3px);}
+  .art-thumb{aspect-ratio:1/1;overflow:hidden;}
+  .art-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+  .art-thumb .fb{width:100%;height:100%;display:none;align-items:center;justify-content:center;font-size:32px;background:var(--panel-in);}
+  .art-meta{padding:.5rem .6rem;}
+  .art-title{color:var(--gold);font-size:.95rem;display:block;}
+  .art-artist{font-size:.68rem;color:var(--cream-dim);}
+
+  /* ref */
+  .ref-wrap{display:flex;flex-direction:column;gap:.9rem;}
+  .ref-img{width:100%;flex-shrink:0;border-radius:1rem;overflow:hidden;border:2px solid var(--gold);}
+  .ref-img img{width:100%;display:block;}
+  .ref-img .fb{width:100%;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;font-size:32px;background:var(--panel-alt);}
+  .ref-name{font-family:'Amatic SC',cursive;font-size:1.9rem;color:var(--gold);line-height:1;}
+  .ref-species{font-size:.72rem;color:var(--cream-dim);margin-bottom:.6rem;}
+  .swatches{display:flex;gap:.35rem;margin-bottom:.6rem;}
+  .swatch{width:1.4rem;height:1.4rem;border-radius:50%;border:1px solid rgba(255,255,255,.2);}
+  .traits{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.6rem;}
+  .trait{font-size:.66rem;background:var(--panel-in);color:var(--cream);border:1px solid var(--line);padding:.2rem .55rem;border-radius:1rem;}
+  .lk-dis{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;}
+  .lk-dis h4{font-size:.62rem;letter-spacing:.06em;color:var(--gold);margin-bottom:.25rem;}
+  .lk-dis ul{list-style:none;font-size:.72rem;color:var(--cream-dim);line-height:1.55;}
+
+  /* music */
+  .music-wrap{border-radius:1rem;overflow:hidden;border:1px solid var(--line);flex:1;min-height:0;display:flex;}
+  .music-wrap iframe{display:block;width:100%;height:100%;flex:1;}
+
+  /* dni */
+  .dni-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:.8rem;}
+  .dni-box{border-radius:.9rem;padding:.7rem .8rem;}
+  .dni-box.no{background:rgba(220,110,140,0.1);border:1px solid rgba(220,110,140,0.3);}
+  .dni-box.yes{background:rgba(150,200,150,0.1);border:1px solid rgba(150,200,150,0.3);}
+  .dni-box h4{font-size:.62rem;letter-spacing:.06em;margin-bottom:.4rem;}
+  .dni-box.no h4{color:#e58aa5;}
+  .dni-box.yes h4{color:#a4d9a4;}
+  .dni-box ul{list-style:none;font-size:.7rem;color:var(--cream-dim);line-height:1.65;}
+  .dni-note{font-size:.7rem;color:var(--cream-dim);text-align:center;line-height:1.6;}
+
+  /* lightbox */
+  .lightbox{position:fixed;inset:0;z-index:100;background:rgba(20,10,30,.88);display:none;align-items:center;justify-content:center;padding:1.5rem;}
+  .lightbox.open{display:flex;}
+  .lb-card{max-width:460px;width:100%;border-radius:1.2rem;overflow:hidden;background:var(--panel);border:2px dashed var(--line);}
+  .lb-bar{display:flex;align-items:center;justify-content:space-between;padding:.6rem .8rem;font-size:.75rem;color:var(--cream-dim);}
+  .lb-bar button{all:unset;cursor:pointer;color:var(--gold);font-size:.75rem;}
+  .lb-img{width:100%;display:block;max-height:55vh;object-fit:contain;background:var(--panel-in);}
+  .lb-cap{padding:.6rem .8rem;font-size:.72rem;color:var(--cream-dim);}
+
+  .footbar{
+    flex-shrink:0;margin-top:1rem;padding-top:.8rem;
+    border-top:2px dashed var(--line);
+    display:flex;align-items:center;justify-content:space-between;
+    font-size:.7rem;color:var(--cream-dim);
+  }
+  .footbar .fb-left{display:flex;align-items:center;gap:.4rem;}
+  .footbar .paw{font-size:.9rem;}
+
+  @media(max-width:480px){
+    .card{padding:1.1rem 1.2rem;border-radius:1.3rem;}
+    .dni-grid{grid-template-columns:1fr;}
+    h1{font-size:2.1rem;}
+  }
+</style>
+</head>
+<body>
+
+<div class="backdrop" id="backdrop"></div>
+
+<div class="card">
+  <div class="tape tl"></div>
+  <div class="tape tr"></div>
+  <div class="corner-star cs2">✦</div>
+
+  <div class="head">
+    <div class="avatar-wrap">
+      <div class="avatar">
+        <img src="pfp2.png" alt="Romiee" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="fb">🐾</div>
+      </div>
+      <span class="deco d1">✦</span>
+      <span class="deco d2">✧</span>
+    </div>
+    <div class="headtext">
+      <h1>Romiee</h1>
+      <div class="tagline">silly purple dawg :3 — wolf, he/him</div>
+      <div class="stat-row">
+        <span class="stat-chip">🎮 <b>plays:</b> roblox</span>
+        <span class="stat-chip">🎧 <b>vibing to:</b> music tab</span>
+        <span class="stat-chip">💜 <b>mood:</b> chaotic soft</span>
+      </div>
+    </div>
+  </div>
+
+  <nav class="nav" id="nav">
+    <button class="navbtn active" data-panel="profile">home</button>
+    <button class="navbtn" data-panel="frens">frens</button>
+    <button class="navbtn" data-panel="art">art</button>
+    <button class="navbtn" data-panel="ref">ref sheet</button>
+    <button class="navbtn" data-panel="music">music</button>
+    <button class="navbtn" data-panel="dni">dni</button>
+  </nav>
+
+  <div class="divider"></div>
+
+  <div class="stage">
+
+    <!-- PROFILE -->
+    <section class="panel active" data-panel="profile">
+      <p class="lead">hey!! i'm romiee. i make <em>things maybe</em>, play <em>games</em>, and im idk im purple ok :3 glad u found this page !!</p>
+      <div class="icon-row">
+        <a href="https://x.com/sillyromiee" title="Twitter">✕</a>
+        <a href="https://www.youtube.com/@sillyromiee" title="YouTube">▶</a>
+        <a href="https://www.roblox.com/users/136959169/profile" title="Roblox">◆</a>
+      </div>
+      <div class="statuspill"><div class="dot"></div> wruff arf arf — probably being gay asf</div>
+
+      <div class="fav-block">
+        <div class="sec-title" style="font-size:1.3rem;margin-top:1rem;">a few favorites</div>
+        <div class="fav-grid">
+          <div class="fav-item"><span class="fav-emoji">🎮</span><div><b>games</b><span>Roblox, cozy sims, anything chaotic</span></div></div>
+          <div class="fav-item"><span class="fav-emoji">🎵</span><div><b>music</b><span>whatever's on the music tab rn</span></div></div>
+          <div class="fav-item"><span class="fav-emoji">🍕</span><div><b>snack</b><span>food.. any food honestly</span></div></div>
+          <div class="fav-item"><span class="fav-emoji">💜</span><div><b>color</b><span>purple obviously :3</span></div></div>
+        </div>
+      </div>
+
+      <div class="note">
+        <span class="note-pin">📌</span>
+        <p><b>fun fact:</b> i'm a wolf who's convinced he's actually a house cat. don't tell him.</p>
+      </div>
+    </section>
+
+    <!-- FRIENDS -->
+    <section class="panel" data-panel="frens">
+      <div class="sec-title">my frens</div>
+      <p class="lead">people i love, in no particular order ✦</p>
+      <div class="frens">
+        <a class="fren" href="https://jaqlito.straw.page/" target="_blank" rel="noopener">
+          <div class="fren-pfp"><img src="francis.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="fb">🌸</div></div>
+          <div class="fren-meta"><span class="fren-name">Francis</span><div class="fren-tag">artist friend!!</div></div>
+          <div class="fren-note">existing maybe</div>
+        </a>
+        <a class="fren" href="https://lukewolfz.straw.page/" target="_blank" rel="noopener">
+          <div class="fren-pfp"><img src="luke.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="fb">👾</div></div>
+          <div class="fren-meta"><span class="fren-name">Luke</span><div class="fren-tag">coolest tidepod dog ever...</div></div>
+          <div class="fren-note">barking at a wall</div>
+        </a>
+        <a class="fren" href="https://sillywicker.straw.page" target="_blank" rel="noopener">
+          <div class="fren-pfp"><img src="wicker.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="fb">⭐</div></div>
+          <div class="fren-meta"><span class="fren-name">Wicker</span><div class="fren-tag">evil british person...</div></div>
+          <div class="fren-note">looking at pigeons</div>
+        </a>
+        <a class="fren" href="https://sodolicioussin.straw.page" target="_blank" rel="noopener">
+          <div class="fren-pfp"><img src="cinn.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="fb">⭐</div></div>
+          <div class="fren-meta"><span class="fren-name">Dani/Cinn</span><div class="fren-tag">smelly person...</div></div>
+          <div class="fren-note">being gay....</div>
+        </a>
+        <a class="fren" href="https://en.wikipedia.org/wiki/Mexico" target="_blank" rel="noopener">
+          <div class="fren-pfp"><img src="lunae.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="fb">👾</div></div>
+          <div class="fren-meta"><span class="fren-name">Lunae</span><div class="fren-tag">another artist friend</div></div>
+          <div class="fren-note">i dont even know</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ART -->
+    <section class="panel" data-panel="art">
+      <div class="sec-title">art gallery</div>
+      <p class="lead">art of my fursona made by <em>amazing artists</em> !! click a piece to see it bigger ✦</p>
+      <div class="art-grid">
+        <div class="art-card" onclick="openLightbox('pfp.png','Romiee','Francis')">
+          <div class="art-thumb"><img src="pfp.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="fb">🌸</div></div>
+          <div class="art-meta"><span class="art-title">Romiee</span><div class="art-artist">art by Francis</div></div>
+        </div>
+        <div class="art-card" onclick="openLightbox('romieeboing.gif','Romiee Boing','Francis')">
+          <div class="art-thumb"><img src="romieeboing.gif" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="fb">✦</div></div>
+          <div class="art-meta"><span class="art-title">Romiee Boing</span><div class="art-artist">art by Francis</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- REF -->
+    <section class="panel" data-panel="ref">
+      <div class="sec-title">reference sheet</div>
+      <div class="ref-wrap">
+        <div class="ref-img">
+          <img src="ref.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="fb">📇</div>
+        </div>
+        <div>
+          <div class="ref-name">Romiee 🐾</div>
+          <div class="ref-species">species: wolf // he/him</div>
+          <div class="swatches">
+            <div class="swatch" style="background:#1a0f2f"></div>
+            <div class="swatch" style="background:#6b3fc8"></div>
+            <div class="swatch" style="background:#9b6fe8"></div>
+            <div class="swatch" style="background:#c4a8f5"></div>
+            <div class="swatch" style="background:#f0ebff"></div>
+          </div>
+          <div class="traits">
+            <span class="trait">silly :3</span>
+            <span class="trait">chaotic</span>
+            <span class="trait">soft</span>
+            <span class="trait">playful</span>
+          </div>
+          <div class="lk-dis">
+            <div><h4>likes</h4><ul><li>games & roblox</li><li>music & vibing</li><li>food...</li></ul></div>
+            <div><h4>dislikes</h4><ul><li>mean people</li><li>early mornings</li><li>being bored</li></ul></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MUSIC -->
+    <section class="panel" data-panel="music">
+      <div class="sec-title">now playing</div>
+      <p class="lead" style="margin-bottom:.6rem;">my favorite artist to vibe to ✦</p>
+      <div class="music-wrap">
+        <iframe src="https://open.spotify.com/embed/artist/1vjVjrMopGFYfuvczWXXM4?utm_source=generator" width="100%" height="100%" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+      </div>
+    </section>
+
+    <!-- DNI -->
+    <section class="panel" data-panel="dni">
+      <div class="sec-title">dni / interact</div>
+      <div class="dni-grid">
+        <div class="dni-box no">
+          <h4>do not interact</h4>
+          <ul>
+            <li>homophobes / transphobes</li>
+            <li>racists / bigots of any kind</li>
+            <li>under 13</li>
+            <li>pro-ship</li>
+            <li>basic dni criteria</li>
+            <li>drama starters</li>
+            <li>nsfw accounts</li>
+          </ul>
+        </div>
+        <div class="dni-box yes">
+          <h4>ok to interact</h4>
+          <ul>
+            <li>furries & furry adjacent</li>
+            <li>lgbtq+ folks !! &lt;3</li>
+            <li>RDR2/RDR1 players</li>
+            <li>if you eat food</li>
+            <li>mutuals always welcome !!</li>
+          </ul>
+        </div>
+      </div>
+      <p class="dni-note">!! if u meet the dni criteria pls don't interact with me or my friends !!<br>otherwise hi !! glad ur here :3 🐾</p>
+    </section>
+
+  </div>
+
+  <div class="footbar">
+    <div class="fb-left"><span class="paw">🐾</span> made with love, probably at 2am</div>
+    <div class="dot"></div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightboxBg(event)">
+  <div class="lb-card">
+    <div class="lb-bar"><span id="lb-title">piece.png</span><button onclick="closeLightbox()">close ✕</button></div>
+    <img class="lb-img" id="lb-img" src="" alt="">
+    <div class="lb-cap" id="lb-artist"></div>
+  </div>
+</div>
+
+<script>
+  // nav switching
+  const navbtns = document.querySelectorAll('.navbtn');
+  const panels = document.querySelectorAll('.panel');
+  navbtns.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const target = btn.dataset.panel;
+      navbtns.forEach(b=>b.classList.toggle('active', b===btn));
+      panels.forEach(p=>p.classList.toggle('active', p.dataset.panel===target));
+    });
+  });
+
+  function openLightbox(src, title, artist){
+    document.getElementById('lb-img').src = src || '';
+    document.getElementById('lb-title').textContent = title + '.png';
+    document.getElementById('lb-artist').textContent = 'art by: ' + artist;
+    document.getElementById('lightbox').classList.add('open');
+  }
+  function closeLightbox(){ document.getElementById('lightbox').classList.remove('open'); }
+  function closeLightboxBg(e){ if(e.target===document.getElementById('lightbox')) closeLightbox(); }
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeLightbox(); });
+
+  // gentle floating sparkles
+  const backdrop = document.getElementById('backdrop');
+  const sparkCount = 26;
+  for(let i=0;i<sparkCount;i++){
+    const s = document.createElement('div');
+    s.className='spark';
+    const size = 2 + Math.random()*3;
+    s.style.width = size+'px';
+    s.style.height = size+'px';
+    s.style.left = Math.random()*100+'%';
+    s.style.top = Math.random()*100+'%';
+    s.style.animationDelay = (Math.random()*7)+'s';
+    s.style.animationDuration = (5+Math.random()*4)+'s';
+    backdrop.appendChild(s);
+  }
+
+  // floating doodles (paws, hearts, stars) for extra warmth
+  const doodleGlyphs = ['🐾','✦','💜','✧','🐾','⋆'];
+  for(let i=0;i<14;i++){
+    const d = document.createElement('div');
+    d.className='doodle';
+    d.textContent = doodleGlyphs[i % doodleGlyphs.length];
+    d.style.left = Math.random()*100+'%';
+    d.style.top = Math.random()*100+'%';
+    d.style.animationDelay = (Math.random()*9)+'s';
+    d.style.animationDuration = (7+Math.random()*5)+'s';
+    backdrop.appendChild(d);
+  }
+</script>
+
+</body>
+</html>
