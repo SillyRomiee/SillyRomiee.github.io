@@ -29,7 +29,7 @@
     padding:1.5rem;position:relative;
   }
 
-  /* background ok */
+  /* cozy backdrop: dusk sky, one soft moon, a scatter of still stars */
   .backdrop{position:fixed;inset:0;z-index:0;overflow:hidden;
     background:linear-gradient(190deg, #3a2a52 0%, #241733 42%, #180f24 100%);
   }
@@ -112,7 +112,7 @@
   /* dashed divider */
   .divider{border-top:2px dashed var(--line);margin-bottom:1rem;flex-shrink:0;}
 
-  /* content stage — no scroll, one panel visible at a time */
+  /* content stage: no scroll, one panel visible at a time */
   .stage{position:relative;flex:1;min-height:0;}
   .panel{
     position:absolute;inset:0;display:none;overflow-y:auto;
@@ -217,6 +217,30 @@
   .music-wrap iframe{display:block;width:100%;}
   .sub-divider{border-top:2px dashed var(--line);margin:1.1rem 0;}
 
+  .games-shelf{display:grid;grid-template-columns:repeat(3,1fr);gap:.9rem;}
+  .game-cover{
+    width:100%;border-radius:.8rem;overflow:hidden;
+    box-shadow:0 4px 10px rgba(0,0,0,.35);
+    transform:rotate(var(--tilt,0deg));
+    transition:transform .15s ease;
+  }
+  .game-cover:hover{transform:rotate(0deg) translateY(-3px);}
+  .cover-art{
+    aspect-ratio:9/16;display:flex;align-items:center;justify-content:center;
+    position:relative;overflow:hidden;
+  }
+  .cover-art img{width:100%;height:100%;object-fit:cover;display:block;}
+  .cover-fallback{
+    display:none;align-items:center;justify-content:center;
+    width:100%;height:100%;position:absolute;inset:0;
+    font-family:'Amatic SC',cursive;font-size:1.9rem;line-height:1;color:#fff;
+    text-shadow:0 2px 4px rgba(0,0,0,.5);
+  }
+  .cover-label{
+    font-size:.68rem;text-align:center;padding:.4rem 4px;
+    background:var(--panel-alt);color:var(--cream-dim);letter-spacing:.02em;
+  }
+
   /* dni */
   .dni-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:.8rem;}
   .dni-box{border-radius:.9rem;padding:.7rem .8rem;}
@@ -249,6 +273,7 @@
   @media(max-width:480px){
     .card{padding:1.1rem 1.2rem;border-radius:1.3rem;}
     .dni-grid{grid-template-columns:1fr;}
+    .games-shelf{grid-template-columns:repeat(2,1fr);}
     h1{font-size:2.1rem;}
   }
 </style>
@@ -275,9 +300,9 @@
       <span class="deco d2">✧</span>
     </div>
     <div class="headtext">
-      <h1>Romiee🐾</h1>
+      <h1>Romiee 🐾</h1>
       <div class="tagline">silly purple dawg :3 - wolf, he/him</div>
-      <div class="statuspill"><div class="dot"></div> wruff arf arf probably being gay asf</div>
+      <div class="statuspill"><div class="dot"></div> wruff arf arf - probably being gay asf</div>
     </div>
   </div>
 
@@ -294,7 +319,7 @@
 
     <!-- PROFILE -->
     <section class="panel active" data-panel="profile">
-      <p class="lead">haiiiiii!! i'm romiee. i make <em>things maybe</em>, play <em>games</em>, and im idk im purple ok :3 glad u found this page !!</p>
+      <p class="lead">hey!! i'm romiee, a <em>purple wolf</em> who's chaotic, soft, and a little too silly for my own good :3 i mostly hop between <em>rdr2</em>, <em>gmod</em>, <em>ksp</em>, and roblox depending on my boredness, and honestly if there's music playing and food nearby i'm having a good day. not a big fan of mean people or early mornings, but easy to win over otherwise !!</p>
       <div class="icon-row">
         <a href="https://x.com/sillyromiee">twitter</a>
         <a href="https://www.youtube.com/@sillyromiee">youtube</a>
@@ -335,8 +360,57 @@
 
       <div class="sub-divider"></div>
 
+      <!-- GAMES -->
+      <div class="sec-title">games i love!</div>
+      <div class="games-shelf">
+        <div class="game-cover" style="--tilt:-3deg;">
+          <div class="cover-art" style="background:linear-gradient(160deg,#6b4423,#2b1a10);">
+            <img src="rdr2.png" alt="RDR2" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <span class="cover-fallback">RDR2</span>
+          </div>
+          <div class="cover-label">Red Dead 2</div>
+        </div>
+        <div class="game-cover" style="--tilt:2deg;">
+          <div class="cover-art" style="background:linear-gradient(160deg,#e8a13c,#7a4e10);">
+            <img src="gmod.png" alt="GMod" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <span class="cover-fallback">GMod</span>
+          </div>
+          <div class="cover-label">Garry's Mod</div>
+        </div>
+        <div class="game-cover" style="--tilt:-2deg;">
+          <div class="cover-art" style="background:linear-gradient(160deg,#3a5f9e,#0e1e3a);">
+            <img src="ksp.png" alt="KSP" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <span class="cover-fallback">KSP</span>
+          </div>
+          <div class="cover-label">KSP</div>
+        </div>
+        <div class="game-cover" style="--tilt:3deg;">
+          <div class="cover-art" style="background:linear-gradient(160deg,#9b6fe8,#3a2a52);">
+            <img src="roblox.png" alt="Roblox" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <span class="cover-fallback">ROBLOX</span>
+          </div>
+          <div class="cover-label">Roblox</div>
+        </div>
+        <div class="game-cover" style="--tilt:-2deg;">
+          <div class="cover-art" style="background:linear-gradient(160deg,#e05555,#7a1f1f);">
+            <img src="brickrigs.png" alt="Brick Rigs" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <span class="cover-fallback">BR</span>
+          </div>
+          <div class="cover-label">Brick Rigs</div>
+        </div>
+        <div class="game-cover" style="--tilt:2deg;">
+          <div class="cover-art" style="background:linear-gradient(160deg,#6fbf5e,#2e5c22);">
+            <img src="minecraft.png" alt="Minecraft" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <span class="cover-fallback">MC</span>
+          </div>
+          <div class="cover-label">Minecraft</div>
+        </div>
+      </div>
+
+      <div class="sub-divider"></div>
+
       <!-- MUSIC -->
-      <div class="sec-title">now playing</div>
+      <div class="sec-title">now listening</div>
       <div class="music-wrap">
         <iframe src="https://open.spotify.com/embed/artist/1vjVjrMopGFYfuvczWXXM4?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
       </div>
@@ -423,7 +497,7 @@
   </div>
 
   <div class="footbar">
-    <div class="fb-left"><span class="paw">🐾</span> You're very cool for reading this :3</div>
+    <div class="fb-left">🐾 You're very cool for reading this :3</div>
     <div class="dot"></div>
   </div>
 </div>
@@ -459,7 +533,7 @@
   function closeLightboxBg(e){ if(e.target===document.getElementById('lightbox')) closeLightbox(); }
   document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeLightbox(); });
 
-  // background
+  // a scatter of still, twinkling stars across the sky
   const backdrop = document.getElementById('backdrop');
   for(let i=0;i<45;i++){
     const s = document.createElement('div');
@@ -473,6 +547,7 @@
     s.style.animationDuration = (2.5+Math.random()*3)+'s';
     backdrop.appendChild(s);
   }
+
 </script>
 
 </body>
