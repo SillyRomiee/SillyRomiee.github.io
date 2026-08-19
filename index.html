@@ -187,14 +187,20 @@
   .fren-note{font-size:.68rem;color:var(--cream-dim);flex-shrink:0;}
 
   /* art */
-  .art-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.7rem;}
+  .art-grid{display:flex;flex-direction:column;align-items:center;gap:.9rem;}
+  .art-card.featured{width:auto;max-width:100%;}
+  .art-card.featured .art-thumb{aspect-ratio:auto;display:flex;justify-content:center;}
+  .art-card.featured .art-thumb img{width:auto;height:auto;max-height:280px;max-width:100%;object-fit:contain;}
+  .art-card.featured .art-meta{text-align:center;}
   .art-card{border-radius:1rem;overflow:hidden;background:var(--panel-alt);cursor:pointer;transition:transform .15s ease;}
   .art-card:hover{transform:translateY(-3px);}
   .art-thumb{aspect-ratio:1/1;overflow:hidden;}
+  .art-row{display:flex;justify-content:center;gap:.9rem;flex-wrap:wrap;}
+  .art-row .art-card{width:210px;flex-shrink:0;}
   .art-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
   .art-thumb .fb{width:100%;height:100%;display:none;align-items:center;justify-content:center;font-size:32px;background:var(--panel-in);}
   .art-meta{padding:.5rem .6rem;}
-  .art-title{color:var(--gold);font-size:.95rem;display:block;}
+  .art-title{display:none;}
   .art-artist{font-size:.68rem;color:var(--cream-dim);}
 
   /* ref */
@@ -319,7 +325,7 @@
 
     <!-- PROFILE -->
     <section class="panel active" data-panel="profile">
-      <p class="lead">Haiiiii!! i'm romiee, a <em>purple wolf</em> who's really gay and a little too silly for my own good :3 i mostly hop between <em>rdr2</em>, <em>gmod</em>, <em>ksp</em>, and roblox depending on my boredness, and honestly if there's music playing and food nearby i'm having a good day. not a big fan of mean people or early mornings, but easy to win over otherwise !!</p>
+      <p class="lead">hey!! i'm romiee, a <em>purple wolf</em> who's chaotic, soft, and a little too silly for my own good :3 i mostly hop between <em>rdr2</em>, <em>gmod</em>, <em>ksp</em>, and roblox depending on my mood, and honestly if there's music playing and food nearby i'm having a good day. not a big fan of mean people or early mornings, but easy to win over otherwise. glad u found this page, make urself at home !!</p>
       <div class="icon-row">
         <a href="https://x.com/sillyromiee">twitter</a>
         <a href="https://www.youtube.com/@sillyromiee">youtube</a>
@@ -361,7 +367,7 @@
       <div class="sub-divider"></div>
 
       <!-- GAMES -->
-      <div class="sec-title">games i love!</div>
+      <div class="sec-title">games i play</div>
       <div class="games-shelf">
         <div class="game-cover" style="--tilt:-3deg;">
           <div class="cover-art" style="background:linear-gradient(160deg,#6b4423,#2b1a10);">
@@ -382,7 +388,7 @@
             <img src="ksp.png" alt="KSP" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
             <span class="cover-fallback">KSP</span>
           </div>
-          <div class="cover-label">KSP</div>
+          <div class="cover-label">Kerbal Space</div>
         </div>
         <div class="game-cover" style="--tilt:3deg;">
           <div class="cover-art" style="background:linear-gradient(160deg,#9b6fe8,#3a2a52);">
@@ -396,7 +402,7 @@
             <img src="brickrigs.png" alt="Brick Rigs" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
             <span class="cover-fallback">BR</span>
           </div>
-          <div class="cover-label">BrickRigs</div>
+          <div class="cover-label">Brick Rigs</div>
         </div>
         <div class="game-cover" style="--tilt:2deg;">
           <div class="cover-art" style="background:linear-gradient(160deg,#6fbf5e,#2e5c22);">
@@ -421,13 +427,19 @@
       <div class="sec-title">art gallery</div>
       <p class="lead">art of my fursona made by <em>amazing artists</em> !! click a piece to see it bigger ✦</p>
       <div class="art-grid">
-        <div class="art-card" onclick="openLightbox('pfp.png','Romiee','Francis')">
-          <div class="art-thumb"><img src="pfp.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="fb">🌸</div></div>
-          <div class="art-meta"><span class="art-title">Romiee</span><div class="art-artist">art by Francis</div></div>
+        <div class="art-card featured" onclick="openLightbox('birthday.png','Birthday','Leftisbored')">
+          <div class="art-thumb"><img src="birthday.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="fb">🎂</div></div>
+          <div class="art-meta"><span class="art-title">Birthday</span><div class="art-artist">art by Leftisbored</div></div>
         </div>
-        <div class="art-card" onclick="openLightbox('romieeboing.gif','Romiee Boing','Francis')">
-          <div class="art-thumb"><img src="romieeboing.gif" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="fb">✦</div></div>
-          <div class="art-meta"><span class="art-title">Romiee Boing</span><div class="art-artist">art by Francis</div></div>
+        <div class="art-row">
+          <div class="art-card" onclick="openLightbox('pfp.png','Romiee','Francis')">
+            <div class="art-thumb"><img src="pfp.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="fb">🌸</div></div>
+            <div class="art-meta"><span class="art-title">Romiee</span><div class="art-artist">art by Francis</div></div>
+          </div>
+          <div class="art-card" onclick="openLightbox('romieeboing.gif','Romiee Boing','Francis')">
+            <div class="art-thumb"><img src="romieeboing.gif" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="fb">✦</div></div>
+            <div class="art-meta"><span class="art-title">Romiee Boing</span><div class="art-artist">art by Francis</div></div>
+          </div>
         </div>
       </div>
     </section>
