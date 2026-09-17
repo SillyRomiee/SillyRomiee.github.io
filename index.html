@@ -187,19 +187,19 @@
   .fren-note{font-size:.68rem;color:var(--cream-dim);flex-shrink:0;}
 
   /* art */
-  .art-grid{display:flex;flex-direction:column;align-items:center;gap:.9rem;}
-  .art-card.featured{width:auto;max-width:100%;}
+  .art-grid{display:flex;flex-direction:column;align-items:stretch;gap:.9rem;}
+  .art-card.featured{width:100%;max-width:100%;}
   .art-card.featured .art-thumb{aspect-ratio:auto;display:flex;justify-content:center;}
   .art-card.featured .art-thumb img{width:auto;height:auto;max-height:280px;max-width:100%;object-fit:contain;}
   .art-card.featured .art-meta{text-align:center;}
   .art-card{border-radius:1rem;overflow:hidden;background:var(--panel-alt);cursor:pointer;transition:transform .15s ease;}
   .art-card:hover{transform:translateY(-3px);}
   .art-thumb{aspect-ratio:1/1;overflow:hidden;}
-  .art-row{display:flex;justify-content:center;gap:.9rem;flex-wrap:wrap;}
-  .art-row .art-card{width:210px;flex-shrink:0;}
+  .art-row{display:grid;grid-template-columns:repeat(2,1fr);gap:.7rem;align-items:start;}
   .art-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
   .art-thumb .fb{width:100%;height:100%;display:none;align-items:center;justify-content:center;font-size:32px;background:var(--panel-in);}
-  .art-meta{padding:.5rem .6rem;}
+  .art-thumb .fb.coming-soon{font-size:.72rem;color:var(--cream-dim);text-align:center;padding:.6rem;line-height:1.5;font-family:'Fuzzy Bubbles',cursive;}
+  .art-meta{padding:.5rem .6rem;text-align:center;}
   .art-title{display:none;}
   .art-artist{font-size:.68rem;color:var(--cream-dim);}
 
@@ -439,6 +439,22 @@
           <div class="art-card" onclick="openLightbox('romieeboing.gif','Romiee Boing','Francis')">
             <div class="art-thumb"><img src="romieeboing.gif" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="fb">✦</div></div>
             <div class="art-meta"><span class="art-title">Romiee Boing</span><div class="art-artist">art by Francis</div></div>
+          </div>
+          <div class="art-card">
+            <div class="art-thumb"><div class="fb coming-soon" style="display:flex;">art coming<br>soon 👀</div></div>
+            <div class="art-meta"><span class="art-title">Romiee</span><div class="art-artist">art by bezimotodol</div></div>
+          </div>
+          <div class="art-card" onclick="openLightbox('tay1.gif','Romiee','TayFennec')">
+            <div class="art-thumb"><img src="tay1.gif" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="fb">🦊</div></div>
+            <div class="art-meta"><span class="art-title">Romiee</span><div class="art-artist">art by TayFennec</div></div>
+          </div>
+          <div class="art-card">
+            <div class="art-thumb"><div class="fb coming-soon" style="display:flex;">art coming<br>soon 👀</div></div>
+            <div class="art-meta"><span class="art-title">Romiee</span><div class="art-artist">art by TayFennec</div></div>
+          </div>
+          <div class="art-card">
+            <div class="art-thumb"><div class="fb coming-soon" style="display:flex;">art coming<br>soon 👀</div></div>
+            <div class="art-meta"><span class="art-title">Romiee</span><div class="art-artist">art by StupidGayShark (sharb)</div></div>
           </div>
         </div>
       </div>
